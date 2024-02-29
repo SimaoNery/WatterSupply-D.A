@@ -1,0 +1,6 @@
+build/**
+cmake-build-debug/**
+docs/output/**
+.idea/**
+DA_water_supply
+DA_water_supply.exe
