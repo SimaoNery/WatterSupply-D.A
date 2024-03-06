@@ -3,7 +3,17 @@ project(DA_water_supply)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(DA_water_supply src/main.cpp)
+add_executable(DA_water_supply src/main.cpp
+        src/models/DeliverySite.cpp
+        src/models/DeliverySite.h
+        src/models/Station.cpp
+        src/models/Station.h
+        src/models/Reservoir.cpp
+        src/models/Reservoir.h
+        src/utils/Dataset.cpp
+        src/utils/Dataset.h
+        src/models/Node.cpp
+        src/models/Node.h)
 
 # Doxygen Build
 find_package(Doxygen)
