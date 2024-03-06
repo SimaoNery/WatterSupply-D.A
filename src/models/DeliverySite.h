@@ -13,25 +13,16 @@ using namespace std;
 
 class DeliverySite : public Node {
 private:
-    int id;
     string name;
-    string code;
     double demand;
     int population;
 public:
     DeliverySite() = default;
 
     // Getters
-    int getId() const {
-        return id;
-    }
 
     const string &getName() const {
         return name;
-    }
-
-    const string &getCode() const {
-        return code;
     }
 
     double getDemand() const {
@@ -44,17 +35,10 @@ public:
 
     // Setters
 
-    void setId(int id) {
-        DeliverySite::id = id;
-    }
-
     void setName(const string &name) {
         DeliverySite::name = name;
     }
 
-    void setCode(const string &code) {
-        DeliverySite::code = code;
-    }
 
     void setDemand(double demand) {
         DeliverySite::demand = demand;
@@ -62,14 +46,6 @@ public:
 
     void setPopulation(int population) {
         DeliverySite::population = population;
-    }
-
-    bool operator==(const DeliverySite &ds) const {
-        return id == ds.id;
-    }
-
-    bool operator<(const DeliverySite &ds) const {
-        return id < ds.id;
     }
 };
 

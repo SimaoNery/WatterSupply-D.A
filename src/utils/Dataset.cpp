@@ -2,7 +2,14 @@
 // Created by jpnsantos on 06/03/24.
 //
 
+#include <fstream>
+#include <sstream>
 #include "Dataset.h"
+
+string CITIES_PATH = "data/Cities_Madeira.csv";
+string PIPES_PATH = "data/Pipes_Madeira.csv";
+string RESERVOIRS_PATH = "data/Reservoirs_Madeira.csv";
+string STATIONS_PATH = "data/Stations_Madeira.csv";
 
 Dataset *Dataset::dataset = nullptr;
 
@@ -27,6 +34,34 @@ Dataset *Dataset::getInstance() {
     }
 }
 
+void Dataset::loadStations() {
+
+    ifstream file(STATIONS_PATH);
+    if (!file.is_open()) {
+        cout << "Error: File " << STATIONS_PATH << " not opened." << endl;
+        return;
+    }
+
+    string row, stationCode, stationId, temp;
+    getline(file, row);
+
+    while (getline(file, row)) {
+        istringstream line(row);
+        getline(line, stationId, ',');
+        getline(line, stationCode, ',');
+        getline(line, temp, ',');
+
+        if (stationId.empty() || stationCode.empty()) {
+            continue;
+        }
+
+        Station station(stoi(stationId), stationCode);
+        //graph.addVertex(station);
+        this->stations.insert(station);
+    }
+    file.close();
+
+}
 
 void Dataset::loadDeliverySites() {
 
@@ -36,10 +71,6 @@ void Dataset::loadReservoirs() {
 
 }
 
-void Dataset::loadStations() {
-    Station station1 = Station(0, "teste");
-    this->stations.insert(station1);
-}
 
 void Dataset::loadPipes() {
 
