@@ -15,38 +15,26 @@ class DeliverySite : public Node {
 private:
     string name;
     double demand;
-    int population;
+    double population;
 public:
     DeliverySite() = default;
+    DeliverySite(string city, int id, string code, double demand, double population);
 
     // Getters
 
-    const string &getName() const {
-        return name;
-    }
+    const string &getName() const;
 
-    double getDemand() const {
-        return demand;
-    }
+    double getDemand() const;
 
-    int getPopulation() const {
-        return population;
-    }
+    double getPopulation() const;
 
     // Setters
 
-    void setName(const string &name) {
-        DeliverySite::name = name;
-    }
+    void setName(const string &name);
 
+    void setDemand(double demand);
 
-    void setDemand(double demand) {
-        DeliverySite::demand = demand;
-    }
-
-    void setPopulation(int population) {
-        DeliverySite::population = population;
-    }
+    void setPopulation(double population);
 };
 
 namespace std {

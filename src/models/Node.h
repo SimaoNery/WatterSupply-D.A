@@ -18,22 +18,14 @@ public:
     virtual ~Node() = default;
 
     // Getters
-    int getId() const {
-        return id;
-    }
+    int getId() const;
 
-    const string &getCode() const {
-        return code;
-    }
+    const string &getCode() const;
 
     // Setters
-    void setId(int id) {
-        Node::id = id;
-    }
+    void setId(int id);
 
-    void setCode(const string &code) {
-        Node::code = code;
-    }
+    void setCode(const string &code);
 
     bool operator==(const Node &rhs) const {
         return id == rhs.id && code == rhs.code;

@@ -22,33 +22,20 @@ public:
 
     // Getters
 
-    string getName() const {
-        return name;
-    }
+    string getName() const;
+
+    DeliverySite *getDeliverySite() const;
 
 
-    DeliverySite *getDeliverySite() const {
-        return deliverySite;
-    }
-
-
-    double getMaxDelivery() const {
-        return maxDelivery;
-    }
+    double getMaxDelivery() const;
 
     // Setters
 
-    void setName(const string &name) {
-        Reservoir::name = name;
-    }
+    void setName(const string &name);
 
-    void setDeliverySite(DeliverySite *deliverySite) {
-        Reservoir::deliverySite = deliverySite;
-    }
+    void setDeliverySite(DeliverySite *deliverySite);
 
-    void setMaxDelivery(double maxDelivery) {
-        Reservoir::maxDelivery = maxDelivery;
-    }
+    void setMaxDelivery(double maxDelivery);
 };
 
 namespace std {

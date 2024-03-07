@@ -6,10 +6,10 @@
 #include <sstream>
 #include "Dataset.h"
 
-string CITIES_PATH = "data/Cities_Madeira.csv";
-string PIPES_PATH = "data/Pipes_Madeira.csv";
-string RESERVOIRS_PATH = "data/Reservoirs_Madeira.csv";
-string STATIONS_PATH = "data/Stations_Madeira.csv";
+string CITIES_PATH = "data/Cities.csv";
+string PIPES_PATH = "data/Pipes.csv";
+string RESERVOIRS_PATH = "data/Reservoir.csv";
+string STATIONS_PATH = "data/Stations.csv";
 
 Dataset *Dataset::dataset = nullptr;
 
@@ -42,31 +42,49 @@ void Dataset::loadStations() {
         return;
     }
 
-    string row, stationCode, stationId, temp;
+    string row, stationCode, stationId;
     getline(file, row);
 
     while (getline(file, row)) {
         istringstream line(row);
         getline(line, stationId, ',');
-        getline(line, stationCode, ',');
-        getline(line, temp, ',');
-
-        if (stationId.empty() || stationCode.empty()) {
-            continue;
-        }
+        getline(line, stationCode, '\r');
 
         Station station(stoi(stationId), stationCode);
         //graph.addVertex(station);
         this->stations.insert(station);
     }
-    file.close();
 
+    file.close();
 }
 
 void Dataset::loadDeliverySites() {
+    ifstream file(CITIES_PATH);
+    if (!file.is_open()) {
+        cout << "Error: File " << CITIES_PATH << " not opened." << endl;
+        return;
+    }
 
+    string row, city, dsId, dsCode, demand, population, temp;
+    getline(file, row);
+
+    while (getline(file, row)) {
+        istringstream line(row);
+        getline(line, city, ',');
+        getline(line, dsId, ',');
+        getline(line, dsCode, ',');
+        getline(line, demand, ',');
+        getline(line, population, ',');
+        getline(line, temp, '\r');
+
+
+        DeliverySite deliverySite(city, stoi(dsId), dsCode, stod(demand), stod(population));
+        //graph.addVertex(station);
+        this->deliverySites.insert(deliverySite);
+    }
+    
+    file.close();
 }
-
 void Dataset::loadReservoirs() {
 
 }
