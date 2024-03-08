@@ -15,7 +15,10 @@ protected:
     int id;
     string code;
 public:
+    Node() = default;
     virtual ~Node() = default;
+
+    Node(int id, string code);
 
     // Getters
     int getId() const;

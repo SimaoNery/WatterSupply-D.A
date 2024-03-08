@@ -19,6 +19,7 @@ private:
     double maxDelivery;
 public:
     Reservoir() = default;
+    Reservoir(string name, DeliverySite *deliverySite, int id, string code, double maxDelivery);
 
     // Getters
 

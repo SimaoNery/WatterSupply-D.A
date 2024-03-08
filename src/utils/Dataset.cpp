@@ -50,6 +50,9 @@ void Dataset::loadStations() {
         getline(line, stationId, ',');
         getline(line, stationCode, '\r');
 
+        Node node(stoi(stationId), stationCode);
+        graph.addVertex(node);
+
         Station station(stoi(stationId), stationCode);
         //graph.addVertex(station);
         this->stations.insert(station);
@@ -65,7 +68,7 @@ void Dataset::loadDeliverySites() {
         return;
     }
 
-    string row, city, dsId, dsCode, demand, population, temp;
+    string row, city, dsId, dsCode, demand, population;
     getline(file, row);
 
     while (getline(file, row)) {
@@ -74,24 +77,99 @@ void Dataset::loadDeliverySites() {
         getline(line, dsId, ',');
         getline(line, dsCode, ',');
         getline(line, demand, ',');
-        getline(line, population, ',');
-        getline(line, temp, '\r');
+        getline(line, population, '\r');
 
+        Node node(stoi(dsId), dsCode);
+        graph.addVertex(node);
 
         DeliverySite deliverySite(city, stoi(dsId), dsCode, stod(demand), stod(population));
         //graph.addVertex(station);
         this->deliverySites.insert(deliverySite);
     }
-    
+
     file.close();
 }
 void Dataset::loadReservoirs() {
+    ifstream file(RESERVOIRS_PATH);
+    if (!file.is_open()) {
+        cout << "Error: File " << RESERVOIRS_PATH << " not opened." << endl;
+        return;
+    }
 
+    string row, res, municipality, resId, resCode, maxDelivery;
+    getline(file, row);
+
+    while (getline(file, row)) {
+        istringstream line(row);
+        getline(line, res, ',');
+        getline(line, municipality, ',');
+        getline(line, resId, ',');
+        getline(line, resCode, ',');
+        getline(line, maxDelivery, '\r');
+
+
+
+        DeliverySite aux;
+        for(const auto& city : deliverySites){
+            if(city.getName() == municipality){
+                aux = city;
+            }
+        }
+
+        Node node(stoi(resId), resCode);
+        graph.addVertex(node);
+
+        Reservoir reservoir(res, &aux, stoi(resId), resCode, stod(maxDelivery));
+        //graph.addVertex(station);
+        this->reservoirs.insert(reservoir);
+    }
+
+    file.close();
 }
 
 
 void Dataset::loadPipes() {
+    ifstream file(PIPES_PATH);
+    if (!file.is_open()) {
+        cout << "Error: File " << PIPES_PATH << " not opened." << endl;
+        return;
+    }
 
+    string row, spA, spB, capacity, direction;
+    getline(file, row);
+
+    while (getline(file, row)) {
+        istringstream line(row);
+        getline(line, spA, ',');
+        getline(line, spB, ',');
+        getline(line, capacity, ',');
+        getline(line, direction, '\r');
+
+        int aux = stoi(direction);
+        int weight = stoi(capacity);
+
+        Node v1;
+        Node v2;
+
+        for(auto vert : graph.getVertexSet()){
+            if(vert->getInfo().getCode() == spA){
+                v1 = vert->getInfo();
+            }
+            else if(vert->getInfo().getCode() == spB) {
+                v2 = vert->getInfo();
+            }
+        }
+
+        if(aux == 0){
+            graph.addBidirectionalEdge(v1, v2, weight);
+        }
+        else{
+            graph.addEdge(v1, v2, weight);
+        }
+
+    }
+
+    file.close();
 }
 
 const Graph<Node> &Dataset::getGraph() const {

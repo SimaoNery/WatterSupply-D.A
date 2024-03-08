@@ -21,7 +21,7 @@ private:
     unordered_set<Station> stations;
 
     static Dataset* dataset;
-    // Private constructor so that no ovjects can be created.
+    // Private constructor so that no objects can be created.
     Dataset();
 
     // Load data methods

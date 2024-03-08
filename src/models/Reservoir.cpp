@@ -4,6 +4,14 @@
 
 #include "Reservoir.h"
 
+Reservoir::Reservoir(std::string name, DeliverySite *deliverySite, int id, std::string code, double maxDelivery) {
+    this->name = name;
+    this->deliverySite = deliverySite;
+    this->id = id;
+    this->code = code;
+    this->maxDelivery = maxDelivery;
+}
+
 string Reservoir::getName() const {
     return this->name;
 }

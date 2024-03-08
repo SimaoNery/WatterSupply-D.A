@@ -4,6 +4,11 @@
 
 #include "Node.h"
 
+Node::Node(int id, std::string code) {
+    this->id = id;
+    this->code = code;
+}
+
 int Node::getId() const {
     return this->id;
 }
@@ -19,3 +24,4 @@ void Node::setId(int id) {
 void Node::setCode(const std::string &code) {
     this->code = code;
 }
+
