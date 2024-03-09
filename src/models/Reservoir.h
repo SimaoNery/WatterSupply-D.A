@@ -15,17 +15,17 @@ using namespace std;
 class Reservoir : public Node {
 private:
     string name;
-    DeliverySite *deliverySite;
+    string municipality;
     double maxDelivery;
 public:
     Reservoir() = default;
-    Reservoir(string name, DeliverySite *deliverySite, int id, string code, double maxDelivery);
+    Reservoir(string name, string municipality, int id, string code, double maxDelivery);
 
     // Getters
 
     string getName() const;
 
-    DeliverySite *getDeliverySite() const;
+   string getMunicipality() const;
 
 
     double getMaxDelivery() const;
@@ -34,7 +34,7 @@ public:
 
     void setName(const string &name);
 
-    void setDeliverySite(DeliverySite *deliverySite);
+    void setMunicipality(string municipality);
 
     void setMaxDelivery(double maxDelivery);
 };

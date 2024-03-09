@@ -4,9 +4,9 @@
 
 #include "Reservoir.h"
 
-Reservoir::Reservoir(std::string name, DeliverySite *deliverySite, int id, std::string code, double maxDelivery) {
+Reservoir::Reservoir(std::string name, string municipality, int id, std::string code, double maxDelivery) {
     this->name = name;
-    this->deliverySite = deliverySite;
+    this->municipality = municipality;
     this->id = id;
     this->code = code;
     this->maxDelivery = maxDelivery;
@@ -16,8 +16,8 @@ string Reservoir::getName() const {
     return this->name;
 }
 
-DeliverySite *Reservoir::getDeliverySite() const {
-    return this->deliverySite;
+string Reservoir::getMunicipality() const {
+    return this->municipality;
 }
 
 double Reservoir::getMaxDelivery() const {
@@ -28,8 +28,8 @@ void Reservoir::setName(const std::string &name) {
     this->name = name;
 }
 
-void Reservoir::setDeliverySite(DeliverySite *deliverySite) {
-    this->deliverySite = deliverySite;
+void Reservoir::setMunicipality(std::string municipality) {
+    this->municipality = municipality;
 }
 
 void Reservoir::setMaxDelivery(double maxDelivery) {

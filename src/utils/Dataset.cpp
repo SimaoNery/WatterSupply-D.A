@@ -104,16 +104,16 @@ void Dataset::loadReservoirs() {
         getline(line, maxDelivery, '\r');
 
 
-
+        /*
         DeliverySite aux;
         for(const auto& city : deliverySites){
             if(city.getName() == municipality){
                 aux = city;
             }
         }
+        */
 
-
-        Reservoir reservoir(res, &aux, stoi(resId), resCode, stod(maxDelivery));
+        Reservoir reservoir(res, municipality, stoi(resId), resCode, stod(maxDelivery));
         graph.addVertex(reservoir);
         this->reservoirs.insert(reservoir);
     }
