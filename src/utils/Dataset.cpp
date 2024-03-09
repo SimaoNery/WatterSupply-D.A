@@ -50,11 +50,9 @@ void Dataset::loadStations() {
         getline(line, stationId, ',');
         getline(line, stationCode, '\r');
 
-        Node node(stoi(stationId), stationCode);
-        graph.addVertex(node);
 
         Station station(stoi(stationId), stationCode);
-        //graph.addVertex(station);
+        graph.addVertex(station);
         this->stations.insert(station);
     }
 
@@ -79,11 +77,9 @@ void Dataset::loadDeliverySites() {
         getline(line, demand, ',');
         getline(line, population, '\r');
 
-        Node node(stoi(dsId), dsCode);
-        graph.addVertex(node);
 
         DeliverySite deliverySite(city, stoi(dsId), dsCode, stod(demand), stod(population));
-        //graph.addVertex(station);
+        graph.addVertex(deliverySite);
         this->deliverySites.insert(deliverySite);
     }
 
@@ -116,11 +112,9 @@ void Dataset::loadReservoirs() {
             }
         }
 
-        Node node(stoi(resId), resCode);
-        graph.addVertex(node);
 
         Reservoir reservoir(res, &aux, stoi(resId), resCode, stod(maxDelivery));
-        //graph.addVertex(station);
+        graph.addVertex(reservoir);
         this->reservoirs.insert(reservoir);
     }
 

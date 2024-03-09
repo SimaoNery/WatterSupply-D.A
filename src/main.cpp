@@ -29,13 +29,14 @@ int main() {
         cout << vert->getInfo().getCode() << endl;
     }
     */
-
     /*Test Edges
     int count = 0;
     for(auto vert :  dataset->getGraph().getVertexSet()){
         for(auto edge : vert->getAdj()){
-            cout << edge->getOrig()->getInfo().getCode() << " ----> " << edge->getDest()->getInfo().getCode() << endl;
-            count++;
+            //cout << edge->getOrig()->getInfo().getCode() << " ----> " << edge->getDest()->getInfo().getCode() << endl; count++;
+
+            auto destination = edge->getDest();
+            cout << destination->getInfo().getCode()<< endl;
         }
     }
     cout << count << endl;
