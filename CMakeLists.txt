@@ -12,6 +12,7 @@ add_executable(DA_water_supply src/main.cpp
         src/models/VertexEdge.h
         src/models/Graph.cpp
         src/models/Graph.h
+        src/managers/FlowManager.cpp
 )
 
 # Doxygen Build

@@ -12,6 +12,8 @@
 
 using namespace std;
 
+#define INF std::numeric_limits<int>::max()
+
 //-----------------------Vertex-----------------------------------
 
 enum class NodeType {
@@ -167,8 +169,6 @@ protected:
 
     double flow = 0; // for flow-related problems
 };
-
-
 
 
 #endif //DA_WATER_SUPPLY_VERTEXEDGE_H
