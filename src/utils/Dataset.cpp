@@ -50,12 +50,9 @@ void Dataset::loadStations() {
         getline(line, stationId, ',');
         getline(line, stationCode, '\r');
 
-        Node node(stoi(stationId), stationCode);
-        graph.addVertex(node);
 
-        Station station(stoi(stationId), stationCode);
-        //graph.addVertex(station);
-        this->stations.insert(station);
+        auto v = new Vertex(stationCode, NodeType::STATION);
+        graph.addVertex(v);
     }
 
     file.close();
@@ -68,27 +65,24 @@ void Dataset::loadDeliverySites() {
         return;
     }
 
-    string row, city, dsId, dsCode, demand, population;
+    string row, name, dsId, dsCode, demand, population;
     getline(file, row);
 
     while (getline(file, row)) {
         istringstream line(row);
-        getline(line, city, ',');
+        getline(line, name, ',');
         getline(line, dsId, ',');
         getline(line, dsCode, ',');
         getline(line, demand, ',');
         getline(line, population, '\r');
 
-        Node node(stoi(dsId), dsCode);
-        graph.addVertex(node);
-
-        DeliverySite deliverySite(city, stoi(dsId), dsCode, stod(demand), stod(population));
-        //graph.addVertex(station);
-        this->deliverySites.insert(deliverySite);
+        auto v = new Vertex(dsCode, NodeType::DELIVERY_SITE, name, stod(demand), stod(population));
+        graph.addVertex(v);
     }
 
     file.close();
 }
+
 void Dataset::loadReservoirs() {
     ifstream file(RESERVOIRS_PATH);
     if (!file.is_open()) {
@@ -108,20 +102,8 @@ void Dataset::loadReservoirs() {
         getline(line, maxDelivery, '\r');
 
 
-
-        DeliverySite aux;
-        for(const auto& city : deliverySites){
-            if(city.getName() == municipality){
-                aux = city;
-            }
-        }
-
-        Node node(stoi(resId), resCode);
-        graph.addVertex(node);
-
-        Reservoir reservoir(res, &aux, stoi(resId), resCode, stod(maxDelivery));
-        //graph.addVertex(station);
-        this->reservoirs.insert(reservoir);
+        auto v = new Vertex(resCode, NodeType::RESERVOIR, res, municipality, stod(maxDelivery));
+        graph.addVertex(v);
     }
 
     file.close();
@@ -148,23 +130,10 @@ void Dataset::loadPipes() {
         int aux = stoi(direction);
         int weight = stoi(capacity);
 
-        Node v1;
-        Node v2;
-
-        for(auto vert : graph.getVertexSet()){
-            if(vert->getInfo().getCode() == spA){
-                v1 = vert->getInfo();
-            }
-            else if(vert->getInfo().getCode() == spB) {
-                v2 = vert->getInfo();
-            }
-        }
-
-        if(aux == 0){
-            graph.addBidirectionalEdge(v1, v2, weight);
-        }
-        else{
-            graph.addEdge(v1, v2, weight);
+        if (aux == 0) {
+            graph.addBidirectionalEdge(spA, spB, weight);
+        } else {
+            graph.addEdge(spA, spB, weight);
         }
 
     }
@@ -172,19 +141,6 @@ void Dataset::loadPipes() {
     file.close();
 }
 
-const Graph<Node> &Dataset::getGraph() const {
+const Graph &Dataset::getGraph() const {
     return this->graph;
 }
-
-const unordered_set<DeliverySite> &Dataset::getDeliverySites() const {
-    return this->deliverySites;
-}
-
-const unordered_set<Reservoir> &Dataset::getReservoirs() const {
-    return this->reservoirs;
-}
-
-const unordered_set<Station> &Dataset::getStations() const {
-    return this->stations;
-}
-

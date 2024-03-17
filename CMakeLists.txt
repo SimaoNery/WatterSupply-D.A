@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.22)
 project(DA_water_supply)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -6,16 +6,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
 add_executable(DA_water_supply src/main.cpp
-        src/models/DeliverySite.cpp
-        src/models/DeliverySite.h
-        src/models/Station.cpp
-        src/models/Station.h
-        src/models/Reservoir.cpp
-        src/models/Reservoir.h
         src/utils/Dataset.cpp
         src/utils/Dataset.h
-        src/models/Node.cpp
-        src/models/Node.h)
+        src/models/VertexEdge.cpp
+        src/models/VertexEdge.h
+        src/models/Graph.cpp
+        src/models/Graph.h
+)
 
 # Doxygen Build
 find_package(Doxygen)
