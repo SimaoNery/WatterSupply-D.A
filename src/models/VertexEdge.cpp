@@ -1,4 +1,6 @@
-#include "Vertex.h"
+#include "VertexEdge.h"
+
+//-----------------------Vertex-----------------------------------
 
 Vertex::Vertex() {
     this->code = "";
@@ -31,7 +33,6 @@ Vertex::Vertex(string code, NodeType nodeType, string name, string municipality,
  * with a given destination vertex (d) and edge weight (w).
  */
 Edge *Vertex::addEdge(Vertex *d, double w) {
-    // TODO: FIX THIS CONSTRUCTOR
     auto newEdge = new Edge(this, d, w);
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
@@ -144,26 +145,26 @@ string Vertex::getCode() const {
 }
 
 NodeType Vertex::getType() const {
-    return NodeType();
+    return this->nodeType;
 }
 
-optional<string> Vertex::getName() const {
+string Vertex::getName() const {
     return this->name;
 }
 
-optional<double> Vertex::getDemand() const {
+double Vertex::getDemand() const {
     return this->demand;
 }
 
-optional<double> Vertex::getPopulation() const {
+double Vertex::getPopulation() const {
     return this->population;
 }
 
-optional<string> Vertex::getMunicipality() const {
+string Vertex::getMunicipality() const {
     return this->municipality;
 }
 
-optional<double> Vertex::getMaxDelivery() const {
+double Vertex::getMaxDelivery() const {
     return this->maxDelivery;
 }
 
@@ -197,3 +198,48 @@ void Vertex::setType(NodeType type) {
     this->nodeType = type;
 }
 
+
+
+//-----------------------Edge-----------------------------------
+
+Edge::Edge(Vertex *orig, Vertex *dest, double w) {
+    this->orig = orig;
+    this->dest = dest;
+    this->weight = w;
+}
+
+Vertex *Edge::getDest() const {
+    return this->dest;
+}
+
+double Edge::getWeight() const {
+    return this->weight;
+}
+
+Vertex *Edge::getOrig() const {
+    return this->orig;
+}
+
+Edge *Edge::getReverse() const {
+    return this->reverse;
+}
+
+bool Edge::isSelected() const {
+    return this->selected;
+}
+
+double Edge::getFlow() const {
+    return flow;
+}
+
+void Edge::setSelected(bool selected) {
+    this->selected = selected;
+}
+
+void Edge::setReverse(Edge *reverse) {
+    this->reverse = reverse;
+}
+
+void Edge::setFlow(double flow) {
+    this->flow = flow;
+}

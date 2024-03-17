@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.22)
 project(DA_water_supply)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -8,10 +8,8 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 add_executable(DA_water_supply src/main.cpp
         src/utils/Dataset.cpp
         src/utils/Dataset.h
-        src/models/Vertex.cpp
-        src/models/Vertex.h
-        src/models/Edge.cpp
-        src/models/Edge.h
+        src/models/VertexEdge.cpp
+        src/models/VertexEdge.h
         src/models/Graph.cpp
         src/models/Graph.h
 )

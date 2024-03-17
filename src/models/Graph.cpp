@@ -69,10 +69,11 @@ bool Graph::removeVertex(string code) {
 bool Graph::addEdge(string source, string dest, double w) const {
     auto v1 = findVertex(source);
     auto v2 = findVertex(dest);
-    if (v1 == nullptr || v2 == nullptr)
+   if (v1 == nullptr || v2 == nullptr)
         return false;
-    v1->addEdge(v2, w);
-    return true;
+   v1->addEdge(v2, w);
+
+   return true;
 }
 
 /*

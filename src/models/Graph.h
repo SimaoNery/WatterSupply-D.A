@@ -7,7 +7,7 @@
 #include <limits>
 #include <algorithm>
 #include "utils/data_structures/MutablePriorityQueue.h"
-#include "Vertex.h"
+#include "VertexEdge.h"
 
 /********************** Graph  ****************************/
 

@@ -51,8 +51,8 @@ void Dataset::loadStations() {
         getline(line, stationCode, '\r');
 
 
-        auto v = Vertex(stationCode, NodeType::STATION);
-        graph.addVertex(&v);
+        auto v = new Vertex(stationCode, NodeType::STATION);
+        graph.addVertex(v);
     }
 
     file.close();
@@ -76,8 +76,8 @@ void Dataset::loadDeliverySites() {
         getline(line, demand, ',');
         getline(line, population, '\r');
 
-        auto v = Vertex(dsCode, NodeType::DELIVERY_SITE, name, stod(demand), stod(population));
-        graph.addVertex(&v);
+        auto v = new Vertex(dsCode, NodeType::DELIVERY_SITE, name, stod(demand), stod(population));
+        graph.addVertex(v);
     }
 
     file.close();
@@ -102,8 +102,8 @@ void Dataset::loadReservoirs() {
         getline(line, maxDelivery, '\r');
 
 
-        auto v = Vertex(resCode, NodeType::RESERVOIR, res, municipality, stod(maxDelivery));
-        graph.addVertex(&v);
+        auto v = new Vertex(resCode, NodeType::RESERVOIR, res, municipality, stod(maxDelivery));
+        graph.addVertex(v);
     }
 
     file.close();

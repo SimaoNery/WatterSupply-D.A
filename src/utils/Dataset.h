@@ -10,9 +10,9 @@
 
 class Dataset {
 private:
-    Graph graph;
-
     static Dataset *dataset;
+
+    Graph graph;
 
     // Private constructor so that no objects can be created.
     Dataset();
