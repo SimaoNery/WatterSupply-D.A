@@ -23,10 +23,35 @@ int main() {
         cout << item.getName() << " " << item.getDeliverySite() << " " << item.getId() << " " << item.getCode() << " " << item.getMaxDelivery() << endl;
     }
     */
+    DeliverySite ds = DeliverySite("A", 1, "A", 1, 1);
+    cout << ds.getName() << endl;
+    Vertex<Node> v = Vertex<Node>(ds);
 
-    /*Test Vertexes
-    for(auto vert : dataset->getGraph().getVertexSet()){
-        cout << vert->getInfo().getCode() << endl;
+    Node &node = v.getInfo();
+    if (node.getType() == NodeType::DELIVERY_SITE) {
+        // Access DeliverySite attributes
+        cout << "Funcionou" << endl;
+    }
+/*
+    for (auto vert: dataset->getGraph().getVertexSet()) {
+        Node *node = &vert->getInfo();
+
+        // Try to cast to DeliverySite
+        auto *deliverySite = dynamic_cast<DeliverySite *>(node);
+
+        if (deliverySite != nullptr) {
+            // Access DeliverySite attributes
+            std::cout << deliverySite->getName() << std::endl;
+            continue;
+        }
+
+        // Try to cast to Reservoir
+        auto *reservoir = dynamic_cast<Reservoir *>(node);
+        if (reservoir != nullptr) {
+            // Access Reservoir attributes
+            std::cout << reservoir->getName() << std::endl;
+            continue;
+        }
     }
     */
     /*Test Edges
