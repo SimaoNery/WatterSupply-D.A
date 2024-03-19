@@ -20,6 +20,10 @@ private:
 public:
     FlowManager();
 
+    double getMaxFlow(string source, string sink);
+
+    double getMaxFlow(string sink);
+
     double getMaxFlow();
 };
 

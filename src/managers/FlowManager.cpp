@@ -100,15 +100,48 @@ void FlowManager::edmondsKarp(string source, string target) {
     }
 }
 
-double FlowManager::getMaxFlow() {
+double FlowManager::getMaxFlow(string source, string sink) {
     double flow = 0;
+    edmondsKarp(source, sink);
 
-    auto v1 = g.findVertex("C_1");
-    edmondsKarp("PS_71", "C_1");
+    auto v = g.findVertex(sink);
 
-    for (auto e: v1->getIncoming()) {
-        flow += e->getFlow();
+    for (auto edge: v->getIncoming()) {
+        flow += edge->getFlow();
     }
 
+    return flow;
+}
+
+double FlowManager::getMaxFlow(string sink) {
+    auto superSource = new Vertex("R_Super", NodeType::RESERVOIR);
+    g.addVertex(superSource);
+
+    for (auto vert: g.getVertexSet()) {
+        if (vert->getType() == NodeType::RESERVOIR) {
+            superSource->addEdge(vert, INF);
+        }
+    }
+
+    double flow = getMaxFlow("R_Super", sink);
+
+    g.removeVertex("R_Super");
+    return flow;
+}
+
+double FlowManager::getMaxFlow() {
+    auto superSink = new Vertex("C_Super", NodeType::DELIVERY_SITE);
+
+    g.addVertex(superSink);
+
+    for (auto vert: g.getVertexSet()) {
+        if (vert->getType() == NodeType::DELIVERY_SITE) {
+            vert->addEdge(superSink, INF);
+        }
+    }
+
+    double flow = getMaxFlow("C_Super");
+
+    g.removeVertex("C_Super");
     return flow;
 }
