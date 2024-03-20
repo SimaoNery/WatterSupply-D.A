@@ -25,6 +25,10 @@ public:
     double getMaxFlow(string sink);
 
     double getMaxFlow();
+
+    bool meetNeeds(string ds, double &difference);
+
+    vector<pair<string, double>> getWaterNeeds();
 };
 
 

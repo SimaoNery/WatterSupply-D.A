@@ -145,3 +145,32 @@ double FlowManager::getMaxFlow() {
     g.removeVertex("C_Super");
     return flow;
 }
+
+bool FlowManager::meetNeeds(string ds, double &difference) {
+    auto v = g.findVertex(ds);
+    double current = 0;
+
+    for (auto edge: v->getIncoming()) {
+        current += edge->getWeight();
+    }
+
+    if (v->getDemand() > current) {
+        difference = v->getDemand() - current;
+        return false;
+    }
+
+    return true;
+}
+
+vector<pair<string, double>> FlowManager::getWaterNeeds() {
+    vector<pair<string, double>> fails;
+    double difference = 0;
+
+    for (auto v: g.getVertexSet()) {
+        if ((v->getType() == NodeType::DELIVERY_SITE) && !meetNeeds(v->getCode(), difference)) {
+            fails.emplace_back(v->getCode(), difference);
+        }
+    }
+
+    return fails;
+}
