@@ -145,11 +145,12 @@ double FlowManager::getMaxFlow() {
 }
 
 bool FlowManager::meetNeeds(string ds, double &difference) {
+    getMaxFlow();
     auto v = g.findVertex(ds);
     double current = 0;
 
     for (auto edge: v->getIncoming()) {
-        current += edge->getWeight();
+        current += edge->getFlow();
     }
 
     if (v->getDemand() > current) {
