@@ -37,6 +37,8 @@ public:
 
     // Getters
     const Graph &getGraph() const;
+
+    string getCityName(string code);
 };
 
 
