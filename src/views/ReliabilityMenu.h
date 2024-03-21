@@ -2,8 +2,8 @@
 // Created by jpnsantos on 21/03/24.
 //
 
-#ifndef DA_WATER_SUPPLY_FAILURESMENU_H
-#define DA_WATER_SUPPLY_FAILURESMENU_H
+#ifndef DA_WATER_SUPPLY_RELIABILITYMENU_H
+#define DA_WATER_SUPPLY_RELIABILITYMENU_H
 
 #include "Menu.h"
 #include <iostream>
@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class FailuresMenu : public Menu {
+class ReliabilityMenu : public Menu {
 public:
     /**
      * Displays the main menu for the statistics options.
@@ -49,4 +49,4 @@ private:
     void printFooterOption();
 };
 
-#endif //DA_WATER_SUPPLY_FAILURESMENU_H
+#endif //DA_WATER_SUPPLY_RELIABILITYMENU_H

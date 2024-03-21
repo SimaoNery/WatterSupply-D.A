@@ -144,3 +144,7 @@ void Dataset::loadPipes() {
 const Graph &Dataset::getGraph() const {
     return this->graph;
 }
+
+string Dataset::getCityName(string code) {
+    return graph.findVertex(code)->getName();
+}

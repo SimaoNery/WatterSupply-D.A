@@ -1,7 +1,7 @@
 
 #include "MainMenu.h"
 #include "MetricsMenu.h"
-#include "FailuresMenu.h"
+#include "ReliabilityMenu.h"
 
 void MainMenu::display() {
     system("clear");
@@ -28,7 +28,7 @@ void MainMenu::display() {
             break;
         }
         case 2: {
-            FailuresMenu failuresMenu;
+            ReliabilityMenu failuresMenu;
             failuresMenu.display();
             break;
         }

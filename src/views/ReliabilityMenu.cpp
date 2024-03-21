@@ -2,13 +2,13 @@
 // Created by jpnsantos on 21/03/24.
 //
 
-#include "FailuresMenu.h"
+#include "ReliabilityMenu.h"
 #include "MainMenu.h"
 
 /**
  * @brief Navigates back to the main menu.
  */
-void FailuresMenu::backToMain() {
+void ReliabilityMenu::backToMain() {
     MainMenu mainMenu;
     mainMenu.display();
 }
@@ -16,7 +16,7 @@ void FailuresMenu::backToMain() {
 /**
  * @brief Displays the footer option and handles user input.
  */
-void FailuresMenu::printFooterOption() {
+void ReliabilityMenu::printFooterOption() {
     int option;
     cout << "\n                                                   0) Back   "
          << "\n***********************************************************\n"
