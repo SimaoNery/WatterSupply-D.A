@@ -13,6 +13,15 @@ add_executable(DA_water_supply src/main.cpp
         src/models/Graph.cpp
         src/models/Graph.h
         src/managers/FlowManager.cpp
+        src/views/Menu.h
+        src/views/MainMenu.cpp
+        src/views/MainMenu.h
+        src/views/FailuresMenu.cpp
+        src/views/FailuresMenu.h
+        src/views/MetricsMenu.cpp
+        src/views/MetricsMenu.h
+        src/managers/FailureManager.cpp
+        src/managers/FailureManager.h
 )
 
 # Doxygen Build
