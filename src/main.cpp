@@ -12,5 +12,18 @@ int main() {
     Menu *menu;
     // Point to main menu
     menu = new MainMenu();
-    menu->display();
+    //menu->display();
+
+    FlowManager flowManager;
+    Metrics initialMetrics = flowManager.calculateMetrics();
+    cout << "Initial metrics:" << endl;
+    cout << "Average difference: " << initialMetrics.averageDifference << endl;
+    cout << "Variance: " << initialMetrics.variance << endl;
+
+    Metrics improvedMetrics = flowManager.balanceLoad();
+    cout << "Improved metrics after load balancing:" << endl;
+    cout << "Average difference: " << improvedMetrics.averageDifference << endl;
+    cout << "Variance: " << improvedMetrics.variance << endl;
+
+
 }

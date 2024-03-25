@@ -3,6 +3,12 @@
 
 #include "../models/Graph.h"
 
+struct Metrics {
+    double averageDifference;
+    double variance;
+    double maxDifference;
+};
+
 class FlowManager {
 private:
     Graph g;
@@ -19,7 +25,7 @@ private:
 
 public:
     FlowManager();
-    
+
     double getMaxFlow(string sink);
 
     double getMaxFlow();
@@ -27,6 +33,12 @@ public:
     bool meetNeeds(string ds, double &difference);
 
     vector<pair<string, double>> getWaterNeeds();
+
+    Metrics calculateMetrics();
+
+    Metrics balanceLoad();
+
+    bool dfs(Vertex *v, double minFlow);
 };
 
 
