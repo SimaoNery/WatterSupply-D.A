@@ -179,7 +179,6 @@ vector<pair<string, double>> FlowManager::getWaterNeeds() {
     return fails;
 }
 
-
 CityMetrics FlowManager::getCityMetrics(string city) {
     double flow = 0;
     auto v = g.findVertex(city);
@@ -190,7 +189,6 @@ CityMetrics FlowManager::getCityMetrics(string city) {
 
     return {v->getCode(), flow, v->getDemand(), v->getDemand() - flow};
 }
-
 
 Metrics FlowManager::calculateMetrics() {
     double averageDifference = 0;

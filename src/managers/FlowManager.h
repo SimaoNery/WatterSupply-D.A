@@ -32,7 +32,7 @@ private:
 
 public:
     FlowManager();
-
+  
     FlowManager(Graph g);
 
     double getMaxFlow(string sink);
