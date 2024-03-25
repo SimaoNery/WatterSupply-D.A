@@ -6,6 +6,10 @@ FlowManager::FlowManager() {
     this->g = dataset->getGraph();
 }
 
+FlowManager::FlowManager(Graph g) {
+    this->g = g;
+}
+
 
 // Function to test the given vertex 'w' and visit it if conditions are met
 void FlowManager::testAndVisit(queue<Vertex *> &q, Edge *e, Vertex *w, double residual) {
@@ -113,6 +117,11 @@ double FlowManager::getMaxFlow(string sink) {
 }
 
 double FlowManager::getMaxFlow() {
+    for (auto v: g.getVertexSet()) {
+        for (auto e: v->getAdj()) {
+            e->setFlow(0);
+        }
+    }
     double flow = 0;
 
     auto superSource = new Vertex("super_source", NodeType::RESERVOIR);
@@ -139,6 +148,7 @@ double FlowManager::getMaxFlow() {
         flow += edge->getFlow();
     }
 
+
     g.removeVertex("super_source");
     g.removeVertex("super_sink");
     return flow;
@@ -146,15 +156,11 @@ double FlowManager::getMaxFlow() {
 
 bool FlowManager::meetNeeds(string ds, double &difference) {
     getMaxFlow();
-    auto v = g.findVertex(ds);
-    double current = 0;
 
-    for (auto edge: v->getIncoming()) {
-        current += edge->getFlow();
-    }
+    CityMetrics cm = getCityMetrics(ds);
 
-    if (v->getDemand() > current) {
-        difference = v->getDemand() - current;
+    if (cm.difference > 0) {
+        difference = cm.difference;
         return false;
     }
 
@@ -172,4 +178,16 @@ vector<pair<string, double>> FlowManager::getWaterNeeds() {
     }
 
     return fails;
+}
+
+
+CityMetrics FlowManager::getCityMetrics(string city) {
+    double flow = 0;
+    auto v = g.findVertex(city);
+
+    for (auto edge: v->getIncoming()) {
+        flow += edge->getFlow();
+    }
+
+    return {v->getCode(), flow, v->getDemand(), v->getDemand() - flow};
 }

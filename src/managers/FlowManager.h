@@ -3,6 +3,13 @@
 
 #include "../models/Graph.h"
 
+struct CityMetrics {
+    string city;
+    double incomingFlow;
+    double demand;
+    double difference;
+};
+
 class FlowManager {
 private:
     Graph g;
@@ -19,7 +26,9 @@ private:
 
 public:
     FlowManager();
-    
+
+    FlowManager(Graph g);
+
     double getMaxFlow(string sink);
 
     double getMaxFlow();
@@ -27,6 +36,8 @@ public:
     bool meetNeeds(string ds, double &difference);
 
     vector<pair<string, double>> getWaterNeeds();
+
+    CityMetrics getCityMetrics(string city);
 };
 
 
