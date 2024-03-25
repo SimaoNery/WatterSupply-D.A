@@ -153,6 +153,8 @@ double FlowManager::getMaxFlow() {
 
 bool FlowManager::meetNeeds(string ds, double &difference) {
     getMaxFlow();
+    auto v = g.findVertex(ds);
+    double current = 0;
 
     CityMetrics cm = getCityMetrics(ds);
 
@@ -179,7 +181,6 @@ vector<pair<string, double>> FlowManager::getWaterNeeds() {
 
 
 CityMetrics FlowManager::getCityMetrics(string city) {
-    getMaxFlow();
     double flow = 0;
     auto v = g.findVertex(city);
 
