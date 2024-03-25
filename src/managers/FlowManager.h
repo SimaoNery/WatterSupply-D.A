@@ -3,6 +3,13 @@
 
 #include "../models/Graph.h"
 
+struct CityMetrics {
+    string city;
+    double incomingFlow;
+    double demand;
+    double difference;
+};
+
 struct Metrics {
     double averageDifference;
     double variance;
@@ -25,6 +32,8 @@ private:
 
 public:
     FlowManager();
+  
+    FlowManager(Graph g);
 
     double getMaxFlow(string sink);
 
@@ -33,6 +42,8 @@ public:
     bool meetNeeds(string ds, double &difference);
 
     vector<pair<string, double>> getWaterNeeds();
+
+    CityMetrics getCityMetrics(string city);
 
     Metrics calculateMetrics();
 

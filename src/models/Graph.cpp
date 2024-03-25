@@ -1,5 +1,5 @@
 #include "Graph.h"
-
+#include <map>
 
 int Graph::getNumVertex() const {
     return vertexSet.size();
@@ -46,10 +46,13 @@ bool Graph::addVertex(Vertex *v) {
  *  Returns true if successful, and false if such vertex does not exist.
  */
 bool Graph::removeVertex(string code) {
+
     for (auto it = vertexSet.begin(); it != vertexSet.end(); it++) {
         if ((*it)->getCode() == code) {
+
             auto v = *it;
             v->removeOutgoingEdges();
+
             for (auto u: vertexSet) {
                 u->removeEdge(v->getCode());
             }
@@ -69,11 +72,11 @@ bool Graph::removeVertex(string code) {
 bool Graph::addEdge(string source, string dest, double w) const {
     auto v1 = findVertex(source);
     auto v2 = findVertex(dest);
-   if (v1 == nullptr || v2 == nullptr)
+    if (v1 == nullptr || v2 == nullptr)
         return false;
-   v1->addEdge(v2, w);
+    v1->addEdge(v2, w);
 
-   return true;
+    return true;
 }
 
 /*

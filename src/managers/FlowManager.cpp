@@ -9,6 +9,10 @@ FlowManager::FlowManager() {
     this->g = dataset->getGraph();
 }
 
+FlowManager::FlowManager(Graph g) {
+    this->g = g;
+}
+
 
 // Function to test the given vertex 'w' and visit it if conditions are met
 void FlowManager::testAndVisit(queue<Vertex *> &q, Edge *e, Vertex *w, double residual) {
@@ -126,13 +130,13 @@ double FlowManager::getMaxFlow() {
 
     for (auto vert: g.getVertexSet()) {
         if (vert->getType() == NodeType::RESERVOIR) {
-            superSource->addEdge(vert, INF);
+            superSource->addEdge(vert, vert->getMaxDelivery());
         }
     }
 
     for (auto vert: g.getVertexSet()) {
         if (vert->getType() == NodeType::DELIVERY_SITE) {
-            vert->addEdge(superSink, INF);
+            vert->addEdge(superSink, vert->getDemand());
         }
     }
 
@@ -152,12 +156,10 @@ bool FlowManager::meetNeeds(string ds, double &difference) {
     auto v = g.findVertex(ds);
     double current = 0;
 
-    for (auto edge: v->getIncoming()) {
-        current += edge->getFlow();
-    }
+    CityMetrics cm = getCityMetrics(ds);
 
-    if (v->getDemand() > current) {
-        difference = v->getDemand() - current;
+    if (cm.difference > 0) {
+        difference = cm.difference;
         return false;
     }
 
@@ -177,6 +179,16 @@ vector<pair<string, double>> FlowManager::getWaterNeeds() {
     return fails;
 }
 
+CityMetrics FlowManager::getCityMetrics(string city) {
+    double flow = 0;
+    auto v = g.findVertex(city);
+
+    for (auto edge: v->getIncoming()) {
+        flow += edge->getFlow();
+    }
+
+    return {v->getCode(), flow, v->getDemand(), v->getDemand() - flow};
+}
 
 Metrics FlowManager::calculateMetrics() {
     double averageDifference = 0;

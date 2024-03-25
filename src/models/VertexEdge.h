@@ -55,7 +55,7 @@ private:           // info node
 public:
     // Constructor for a default VertexEdge
     Vertex();
-
+    
     // Constructor for a VertexEdge of type STATION
     Vertex(string code, NodeType nodeType);
 

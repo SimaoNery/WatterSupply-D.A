@@ -6,8 +6,15 @@
 #define DA_WATER_SUPPLY_RELIABILITYMANAGER_H
 
 
-class ReliabilityManager {
+#include "models/Graph.h"
 
+class ReliabilityManager {
+private:
+    Graph graph;
+public:
+    ReliabilityManager();
+
+    vector<pair<std::string, double>> evaluateReservoirImpact(string code);
 };
 
 
