@@ -132,13 +132,13 @@ double FlowManager::getMaxFlow() {
 
     for (auto vert: g.getVertexSet()) {
         if (vert->getType() == NodeType::RESERVOIR) {
-            superSource->addEdge(vert, INF);
+            superSource->addEdge(vert, vert->getMaxDelivery());
         }
     }
 
     for (auto vert: g.getVertexSet()) {
         if (vert->getType() == NodeType::DELIVERY_SITE) {
-            vert->addEdge(superSink, INF);
+            vert->addEdge(superSink, vert->getDemand());
         }
     }
 
@@ -182,6 +182,7 @@ vector<pair<string, double>> FlowManager::getWaterNeeds() {
 
 
 CityMetrics FlowManager::getCityMetrics(string city) {
+    getMaxFlow();
     double flow = 0;
     auto v = g.findVertex(city);
 

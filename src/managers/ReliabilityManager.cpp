@@ -14,7 +14,6 @@ ReliabilityManager::ReliabilityManager() {
 vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string reservoir) {
     vector<pair<string, double>> res;
     FlowManager originalFlowManager(graph);
-    double flow1 = originalFlowManager.getMaxFlow();
 
     // Create a new graph that is a copy of the original graph but without the reservoir
     Graph g;
@@ -36,8 +35,16 @@ vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string 
     }
 
     FlowManager flowManager(g);
-    double flow2 = flowManager.getMaxFlow();
-    cout << "Original flow: " << flow1 << endl;
-    cout << "New flow: " << flow2 << endl;
+
+    for (auto city: g.getDeliverySites()) {
+        CityMetrics originalMetrics = originalFlowManager.getCityMetrics(city->getCode());
+        CityMetrics changedMetrics = flowManager.getCityMetrics(city->getCode());
+
+        // If the city has less flow in the copied graph, it's affected by the removal of the reservoir
+        if (changedMetrics.incomingFlow < originalMetrics.incomingFlow && originalMetrics.difference == 0) {
+            res.emplace_back(city->getCode(), changedMetrics.difference);
+        }
+    }
+
     return res;
 }
