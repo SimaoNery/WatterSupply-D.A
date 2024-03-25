@@ -11,28 +11,53 @@ ReliabilityManager::ReliabilityManager() {
     this->graph = dataset->getGraph();
 }
 
-vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string reservoir) {
-    vector<pair<string, double>> res;
-    FlowManager originalFlowManager(graph);
-
-    // Create a new graph that is a copy of the original graph but without the reservoir
+// copy graph without vertex
+Graph ReliabilityManager::copyGraphWithoutVertex(string code) {
     Graph g;
     for (Vertex *v: graph.getVertexSet()) {
-        if (v->getCode() != reservoir) {
+        if (v->getCode() != code) {
             g.addVertex(new Vertex(*v));
         }
     }
     for (Vertex *v: graph.getVertexSet()) {
-        if (v->getCode() != reservoir) {
+        if (v->getCode() != code) {
             Vertex *copiedVertex = g.findVertex(v->getCode());
             for (Edge *e: v->getAdj()) {
-                if (e->getDest()->getCode() != reservoir) {
+                if (e->getDest()->getCode() != code) {
                     Vertex *dest = g.findVertex(e->getDest()->getCode());
                     copiedVertex->addEdge(dest, e->getWeight());
                 }
             }
         }
     }
+    return g;
+}
+
+// copy graph without edge
+Graph ReliabilityManager::copyGraphWithoutEdge(string orig, string dest) {
+    Graph g;
+    for (Vertex *v: graph.getVertexSet()) {
+        g.addVertex(new Vertex(*v));
+    }
+    for (Vertex *v: graph.getVertexSet()) {
+        Vertex *copiedVertex = g.findVertex(v->getCode());
+        for (Edge *e: v->getAdj()) {
+            if (e->getOrig()->getCode() != orig || e->getDest()->getCode() != dest) {
+                Vertex *orig = g.findVertex(e->getOrig()->getCode());
+                Vertex *dest = g.findVertex(e->getDest()->getCode());
+                copiedVertex->addEdge(dest, e->getWeight());
+            }
+        }
+    }
+    return g;
+}
+
+vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string reservoir) {
+    vector<pair<string, double>> res;
+    FlowManager originalFlowManager(graph);
+
+    // Create a new graph that is a copy of the original graph but without the reservoir
+    Graph g = copyGraphWithoutVertex(reservoir);
 
     FlowManager flowManager(g);
 

@@ -15,6 +15,10 @@ public:
     ReliabilityManager();
 
     vector<pair<std::string, double>> evaluateReservoirImpact(string code);
+
+    Graph copyGraphWithoutVertex(string code);
+
+    Graph copyGraphWithoutEdge(string orig, string dest);
 };
 
 

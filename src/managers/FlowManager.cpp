@@ -180,6 +180,7 @@ vector<pair<string, double>> FlowManager::getWaterNeeds() {
 }
 
 CityMetrics FlowManager::getCityMetrics(string city) {
+    getMaxFlow();
     double flow = 0;
     auto v = g.findVertex(city);
 
