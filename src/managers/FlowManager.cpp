@@ -1,6 +1,9 @@
 #include "FlowManager.h"
 #include "utils/Dataset.h"
 
+#include <cmath>
+#include <map>
+
 FlowManager::FlowManager() {
     Dataset *dataset = Dataset::getInstance();
     this->g = dataset->getGraph();
@@ -117,11 +120,6 @@ double FlowManager::getMaxFlow(string sink) {
 }
 
 double FlowManager::getMaxFlow() {
-    for (auto v: g.getVertexSet()) {
-        for (auto e: v->getAdj()) {
-            e->setFlow(0);
-        }
-    }
     double flow = 0;
 
     auto superSource = new Vertex("super_source", NodeType::RESERVOIR);
@@ -147,7 +145,6 @@ double FlowManager::getMaxFlow() {
     for (auto edge: superSink->getIncoming()) {
         flow += edge->getFlow();
     }
-
 
     g.removeVertex("super_source");
     g.removeVertex("super_sink");
@@ -191,4 +188,130 @@ CityMetrics FlowManager::getCityMetrics(string city) {
     }
 
     return {v->getCode(), flow, v->getDemand(), v->getDemand() - flow};
+}
+
+
+Metrics FlowManager::calculateMetrics() {
+    double averageDifference = 0;
+    double variance = 0;
+    double maxDifference = 0;
+    int edgeCount = 0;
+    // Calculate the total difference and the maximum difference
+    double totalDifference = 0;
+    for (auto v: g.getVertexSet()) {
+        for (auto e: v->getAdj()) {
+            // Ignore edges with infinite capacity
+            if (e->getWeight() == INF) continue;
+
+            double difference = e->getWeight() - e->getFlow();
+            totalDifference += difference;
+            maxDifference = max(maxDifference, difference);
+            edgeCount++;
+        }
+    }
+
+    // Calculate the average difference
+    averageDifference = totalDifference / edgeCount;
+
+    // Calculate the variance
+    double totalSquaredDifference = 0;
+    for (auto v: g.getVertexSet()) {
+        for (auto e: v->getAdj()) {
+            // Ignore edges with infinite capacity
+            if (e->getWeight() == INF) continue;
+
+            double difference = e->getWeight() - e->getFlow();
+            totalSquaredDifference += pow(difference - averageDifference, 2);
+        }
+    }
+    variance = totalSquaredDifference / edgeCount;
+
+    // Return the calculated metrics
+    return {averageDifference, variance, maxDifference};
+}
+
+Metrics FlowManager::balanceLoad() {
+    // Create a super source and a super sink
+    auto *superSource = new Vertex("super_source", NodeType::RESERVOIR);
+    auto *superSink = new Vertex("super_sink", NodeType::DELIVERY_SITE);
+
+    // Add the super source and super sink to the graph
+    g.addVertex(superSource);
+    g.addVertex(superSink);
+
+    // Connect the super source to all sources and all sinks to the super sink
+    for (auto v: g.getVertexSet()) {
+        if (v->getType() == NodeType::RESERVOIR) {
+            superSource->addEdge(v, INF);
+        }
+        if (v->getType() == NodeType::DELIVERY_SITE) {
+            v->addEdge(superSink, INF);
+        }
+    }
+
+    // Calculate the initial metrics
+    Metrics metrics = calculateMetrics();
+    double averageDifference = metrics.averageDifference;
+    double variance = metrics.variance;
+
+    // Set a threshold for the variance
+    double threshold = 0.01;
+
+    // While the variance is above the threshold
+    while (variance > threshold) {
+        // Perform a DFS from the super source to the super sink
+        bool isFlowChanged = dfs(superSource, INF);
+
+        // If the DFS doesn't change the flow anymore, break the loop
+        if (!isFlowChanged) break;
+
+        // Recalculate the metrics
+        metrics = calculateMetrics();
+        averageDifference = metrics.averageDifference;
+        variance = metrics.variance;
+    }
+
+    // Remove the super source and super sink from the graph
+    g.removeVertex("super_source");
+    g.removeVertex("super_sink");
+
+    // Return the new metrics
+    return metrics;
+}
+
+bool FlowManager::dfs(Vertex *v, double minFlow) {
+    // If the current vertex is the sink, return true
+    if (v->getType() == NodeType::DELIVERY_SITE) return true;
+
+    // Mark the current vertex as visited
+    v->setVisited(true);
+
+    // For each unvisited adjacent vertex, visit it and try to push flow to it
+    for (auto e: v->getAdj()) {
+        Vertex *w = e->getDest();
+        if (!w->isVisited()) {
+            double residual = e->getWeight() - e->getFlow(); // Calculate the residual capacity of the edge
+
+            // Calculate the total outgoing flow of the vertex
+            double totalOutgoingFlow = 0;
+            for (auto edge: v->getAdj()) {
+                totalOutgoingFlow += edge->getFlow();
+            }
+
+            // Check if the edge has enough residual capacity and the source can provide the new flow
+            if (residual >= minFlow && totalOutgoingFlow >= minFlow) {
+                // If you can push flow to the sink through the adjacent vertex, update the flow along the path
+                double newFlow = min(residual, minFlow);
+                e->setFlow(e->getFlow() + newFlow);
+
+                // Recursively call dfs on the adjacent vertex
+                if (dfs(w, newFlow)) return true;
+
+                // If the dfs call returns false, undo the flow update
+                e->setFlow(e->getFlow() - newFlow);
+            }
+        }
+    }
+
+    return false;
 }
