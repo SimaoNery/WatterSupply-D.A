@@ -136,6 +136,7 @@ void Dataset::loadPipes() {
             graph.addEdge(spA, spB, weight);
         }
 
+        pipes.emplace_back(spA, spB);
     }
 
     file.close();
@@ -147,4 +148,8 @@ const Graph &Dataset::getGraph() const {
 
 string Dataset::getCityName(string code) {
     return graph.findVertex(code)->getName();
+}
+
+vector<pair<string, string>> Dataset::getPipes() {
+    return this->pipes;
 }

@@ -19,7 +19,10 @@ public:
     Graph copyGraphWithoutVertex(string code);
 
     Graph copyGraphWithoutEdge(string orig, string dest);
-};
 
+    vector<pair<string, double>> evaluateStationImpact(string code);
+
+    vector<pair<string, double>> evaluatePipeImpact(string source, string dest);
+};
 
 #endif //DA_WATER_SUPPLY_RELIABILITYMANAGER_H
