@@ -20,27 +20,7 @@ public:
      * @see numberAirportsFlights(), flightsOutAirport(), flightsPerCityAirline(), airportToCountries(), numberDestinations(), numberDestinationXstops(), maxTrip(), topKAirports(), essentialAirports(), backToMain()
      * @return void
      */
-    void display() override {
-        cout << "****************************************************************************************\n"
-             << "*   reliability and sensitivity to failures                                            *\n"
-             << "*                                                                                      *\n"
-             << "*     1)                                                                               *\n"
-             << "*                                                                                      *\n"
-             << "*                                                                              0) Back *\n"
-             << "****************************************************************************************\n"
-             << "Option: ";
-        int option;
-        while (!(cin >> option) || (option < 0 || option > 9)) {
-            cin.clear(); // clear the error state
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore the invalid input
-            cout << "Invalid option, please try again: ";
-        }
-        switch (option) {
-            case 0:
-                backToMain();
-                break;
-        }
-    }
+    void display() override;
 
 private:
 

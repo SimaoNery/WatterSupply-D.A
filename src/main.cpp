@@ -13,8 +13,8 @@ int main() {
     Menu *menu;
     // Point to main menu
     menu = new MainMenu();
-    //menu->display();
-
+    menu->display();
+/*
     // test evaluation
     ReliabilityManager reliabilityManager;
 
@@ -26,7 +26,7 @@ int main() {
             cout << "   - " << dataset->getCityName(city.first) << " (" << city.first << "): " << city.second << endl;
         }
     }
-
+*/
     /*  // test balance
       FlowManager flowManager;
       // Before balancing load
