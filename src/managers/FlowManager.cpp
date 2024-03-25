@@ -218,7 +218,6 @@ Metrics FlowManager::calculateMetrics() {
     for (auto v: g.getVertexSet()) {
         for (auto e: v->getAdj()) {
             // Ignore edges with infinite capacity
-            if (e->getWeight() == INF) continue;
 
             double difference = e->getWeight() - e->getFlow();
             totalSquaredDifference += pow(difference - averageDifference, 2);
@@ -242,10 +241,10 @@ Metrics FlowManager::balanceLoad() {
     // Connect the super source to all sources and all sinks to the super sink
     for (auto v: g.getVertexSet()) {
         if (v->getType() == NodeType::RESERVOIR) {
-            superSource->addEdge(v, INF);
+            superSource->addEdge(v, v->getMaxDelivery());
         }
         if (v->getType() == NodeType::DELIVERY_SITE) {
-            v->addEdge(superSink, INF);
+            v->addEdge(superSink, v->getDemand());
         }
     }
 
