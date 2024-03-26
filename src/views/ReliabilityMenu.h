@@ -8,6 +8,7 @@
 #include "Menu.h"
 #include <iostream>
 #include <limits>
+#include "managers/ReliabilityManager.h"
 
 using namespace std;
 
@@ -24,9 +25,18 @@ public:
 
 private:
 
+    ReliabilityManager reliabilityManager;
+
     static void backToMain();
 
     void printFooterOption();
+
+    void showRemovingReservoir();
+
+    void showRemovingStations();
+
+    void showPipelineFails();
+
 };
 
 #endif //DA_WATER_SUPPLY_RELIABILITYMENU_H

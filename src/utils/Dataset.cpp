@@ -51,6 +51,8 @@ void Dataset::loadStations() {
         getline(line, stationCode, '\r');
 
 
+        stations.emplace_back(stoi(stationId), stationCode);
+
         auto v = new Vertex(stationCode, NodeType::STATION);
         graph.addVertex(v);
     }
@@ -147,6 +149,10 @@ const Graph &Dataset::getGraph() const {
 }
 
 string Dataset::getCityName(string code) {
+    return graph.findVertex(code)->getName();
+}
+
+string Dataset::getReservoirName(string code) {
     return graph.findVertex(code)->getName();
 }
 

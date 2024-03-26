@@ -41,6 +41,10 @@ public:
 
     string getCityName(string code);
 
+    string getReservoirName(string code);
+
+    vector<pair<int, string>> stations;
+
     vector<pair<string, string>> getPipes();
 };
 
