@@ -23,7 +23,7 @@ int main() {
         vector<pair<string, double>> res = reliabilityManager.evaluatePipeImpact(p.first, p.second);
         cout << "Pipe " << p.first << " - " << p.second << " impact: " << endl;
         for (auto city: res) {
-            cout << "   - " << dataset->getCityName(city.first) << " (" << city.first << "): " << city.second << endl;
+            cout << "   - " << dataset->getNodeName(city.first) << " (" << city.first << "): " << city.second << endl;
         }
     }
 */

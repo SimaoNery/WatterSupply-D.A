@@ -14,6 +14,7 @@
      * @return void
      */
 void MetricsMenu::display() {
+    system("clear");
     cout << "****************************************************************************************\n"
          << "*   basic service metrics                                                              *\n"
          << "*                                                                                      *\n"
@@ -86,8 +87,9 @@ void MetricsMenu::showFlowForCity() {
     string code;
     cout << "Enter city code: ";
     cin >> code;
+    transform(code.begin(), code.end(), code.begin(), ::toupper);
     cout << "\n***********************************************************\n";
-    cout << "\nFlow getting into " << dataset->getCityName(code) << " (" << code << ")" << ": "
+    cout << "\nFlow getting into " << dataset->getNodeName(code) << " (" << code << ")" << ": "
          << flowManager.getMaxFlow(code)
          << " (m3/s) " << endl;
     printFooterOption();
@@ -110,7 +112,7 @@ void MetricsMenu::showWaterNeeds() {
     cout << "\n Water needs for current configuration: \n";
 
     for (const auto &value: flowManager.getWaterNeeds()) {
-        cout << "   - " << dataset->getCityName(value.first) << " (" << value.first << ")" << ": needs " << value.second
+        cout << "   - " << dataset->getNodeName(value.first) << " (" << value.first << ")" << ": needs " << value.second
              << " (m3/s) " << endl;
     }
     printFooterOption();
