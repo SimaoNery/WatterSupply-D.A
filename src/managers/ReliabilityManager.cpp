@@ -122,3 +122,31 @@ vector<pair<string, double>> ReliabilityManager::evaluatePipeImpact(string sourc
     return res;
 }
 
+vector<pair<pair<string, string>, double>> ReliabilityManager::evaluateCityImpactByPipes(string code) {
+    // vector<pipe, impact>
+    vector<pair<pair<string, string>, double>> res;
+
+    FlowManager originalFlowManager(graph);
+    Dataset *dataset = Dataset::getInstance();
+    // calculate affecting pipes for each city
+    for (auto pipe: dataset->getPipes()) {
+        // Create a new graph that is a copy of the original graph but without the reservoir
+        Graph g = copyGraphWithoutEdge(pipe.first, pipe.second);
+
+        FlowManager flowManager(g);
+
+        CityMetrics originalMetrics = originalFlowManager.getCityMetrics(code);
+        CityMetrics changedMetrics = flowManager.getCityMetrics(code);
+
+        // If the city has less flow in the copied graph, it's affected by the removal of the reservoir
+        if (changedMetrics.incomingFlow < originalMetrics.incomingFlow) {
+            res.emplace_back(make_pair(pipe.first, pipe.second),
+                             changedMetrics.difference);
+        }
+    }
+
+    return res;
+}
+
+
+

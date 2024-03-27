@@ -31,12 +31,21 @@ private:
 
     void printFooterOption();
 
-    void showRemovingReservoir();
+    void showNoAffectingStations();
 
-    void showRemovingStations();
+    void showCitiesAffectedByStation();
 
-    void showPipelineFails();
+    void showAffectingStations();
 
+    void showStationsReliability();
+
+    void showPipelineReliability();
+
+    void showReservoirsReliability();
+
+    void showAffectingPipes();
+
+    void showAffectedCities();
 };
 
 #endif //DA_WATER_SUPPLY_RELIABILITYMENU_H

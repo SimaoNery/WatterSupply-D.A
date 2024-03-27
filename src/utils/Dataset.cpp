@@ -148,7 +148,7 @@ const Graph &Dataset::getGraph() const {
     return this->graph;
 }
 
-string Dataset::getCityName(string code) {
+string Dataset::getNodeName(string code) {
     return graph.findVertex(code)->getName();
 }
 

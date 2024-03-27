@@ -23,6 +23,8 @@ public:
     vector<pair<string, double>> evaluateStationImpact(string code);
 
     vector<pair<string, double>> evaluatePipeImpact(string source, string dest);
+
+    vector<pair<pair<string, string>, double>> evaluateCityImpactByPipes(string code);
 };
 
 #endif //DA_WATER_SUPPLY_RELIABILITYMANAGER_H

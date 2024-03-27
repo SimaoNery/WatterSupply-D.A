@@ -39,7 +39,7 @@ public:
     // Getters
     const Graph &getGraph() const;
 
-    string getCityName(string code);
+    string getNodeName(string code);
 
     string getReservoirName(string code);
 
