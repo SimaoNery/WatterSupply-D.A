@@ -34,7 +34,6 @@ CityMetrics ReliabilityManager::getCityMetrics(std::string code) {
 vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string code) {
     vector<pair<string, double>> res;
     Dataset *dataset = Dataset::getInstance();
-    dataset->resetChanges();
 
     FlowManager flowManager;
     auto v = graph.findVertex(code);
@@ -59,7 +58,7 @@ vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string 
 vector<pair<string, double>> ReliabilityManager::evaluateStationImpact(string code) {
     vector<pair<string, double>> res;
     Dataset *dataset = Dataset::getInstance();
-    dataset->resetChanges();
+
 
     FlowManager flowManager;
 
