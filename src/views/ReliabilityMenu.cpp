@@ -70,25 +70,35 @@ void ReliabilityMenu::showReservoirsReliability() {
     cout << "\n***********************************************************\n";
     Dataset *dataset = Dataset::getInstance();
     string code;
-    cout << "Enter reservoir code: ";
-    cin >> code;
-    transform(code.begin(), code.end(), code.begin(), ::toupper);
-    cout << "\n***********************************************************\n";
-    cout << "\nCities affected by the removal of " << dataset->getReservoirName(code) << " (" << code << ")" << ":\n";
+    string cont = "YES";
+
+    while (cont == "YES") {
+        cout << "Enter reservoir code: ";
+        cin >> code;
+        transform(code.begin(), code.end(), code.begin(), ::toupper);
+        cout << "\n***********************************************************\n";
+        cout << "\nCities affected by the removal of " << dataset->getReservoirName(code) << " (" << code << ")"
+             << ":\n";
 
 
-    vector<pair<string, double>> affectedCities = reliabilityManager.evaluateReservoirImpact(code);
+        vector<pair<string, double>> affectedCities = reliabilityManager.evaluateReservoirImpact(code);
 
 
-    if (affectedCities.empty()) {
-        cout << "No cities affected by the removal of this reservoir." << endl;
-    } else {
+        if (affectedCities.empty()) {
+            cout << "No cities affected by the removal of this reservoir." << endl;
+        } else {
 
-        for (const auto &city: affectedCities) {
-            cout << "\n - " << dataset->getNodeName(city.first) << " (" << city.first << ")" << ": "
-                 << city.second
-                 << " (m3/s) " << endl;
+            for (const auto &city: affectedCities) {
+                cout << "\n - " << dataset->getNodeName(city.first) << " (" << city.first << ")" << ": "
+                     << city.second
+                     << " (m3/s) " << endl;
+            }
         }
+
+        cout << endl << "Do you want to remove another reservoir? (yes/no)" << endl;
+        cin >> cont;
+        transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
+        cout << endl;
     }
 
     printFooterOption();
@@ -125,7 +135,7 @@ void ReliabilityMenu::showStationsReliability() {
             showCitiesAffectedByStation();
             break;
         case 4:
-            sequentialPipeRemoval();
+            sequentialStationRemoval();
             break;
         case 0:
             backToMain();
@@ -139,6 +149,7 @@ void ReliabilityMenu::showNoAffectingStations() {
     Dataset *dataset = Dataset::getInstance();
     Graph g = dataset->getGraph();
     for (auto s: g.getStations()) {
+        dataset->resetChanges();
         vector<pair<string, double>> res = reliabilityManager.evaluateStationImpact(s->getCode());
         if (res.empty()) {
             cout << "- " << s->getCode() << endl;
@@ -154,6 +165,7 @@ void ReliabilityMenu::showAffectingStations() {
     Dataset *dataset = Dataset::getInstance();
     Graph g = dataset->getGraph();
     for (auto s: g.getStations()) {
+        dataset->resetChanges();
         vector<pair<string, double>> res = reliabilityManager.evaluateStationImpact(s->getCode());
         if (!res.empty()) {
             cout << s->getCode() << endl;
@@ -178,7 +190,7 @@ void ReliabilityMenu::showCitiesAffectedByStation() {
     cout << "\n***********************************************************\n";
     cout << "\nCities affected by the removal of " << code << ":\n";
 
-
+    dataset->resetChanges();
     vector<pair<string, double>> affectedCities = reliabilityManager.evaluateStationImpact(code);
 
 
@@ -344,14 +356,14 @@ void ReliabilityMenu::sequentialStationRemoval() {
 
     string code;
     string cont = "YES";
-
+    dataset->resetChanges();
     while (cont == "YES") {
         cout << "Choose a station:";
         cin >> code;
         transform(code.begin(), code.end(), code.begin(), ::toupper);
         cout << endl;
 
-        vector<pair<string, double>> affectedCities = reliabilityManager.evaluateStationImpact(cont);
+        vector<pair<string, double>> affectedCities = reliabilityManager.evaluateStationImpact(code);
 
         if (!affectedCities.empty()) {
             for (const auto &city: affectedCities) {
@@ -376,7 +388,7 @@ void ReliabilityMenu::sequentialStationRemoval() {
 void ReliabilityMenu::sequentialReservoirRemoval() {
     cout << "\n***********************************************************\n";
     Dataset *dataset = Dataset::getInstance();
-
+    dataset->resetChanges();
     string code;
     string cont = "YES";
 
