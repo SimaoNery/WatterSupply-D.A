@@ -3,6 +3,7 @@
 
 #include "../models/Graph.h"
 
+// Struct to store the metrics of a city
 struct CityMetrics {
     string city;
     double incomingFlow;
@@ -10,6 +11,7 @@ struct CityMetrics {
     double difference;
 };
 
+// Struct to store the metrics of the flow
 struct Metrics {
     double averageDifference;
     double variance;

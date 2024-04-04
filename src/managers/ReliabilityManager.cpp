@@ -6,6 +6,11 @@
 #include "utils/Dataset.h"
 #include "FlowManager.h"
 
+/**
+ * @brief Constructor for the ReliabilityManager class.
+ * Initializes the original metrics for each city.
+ * Complexity: O(n)
+ */
 ReliabilityManager::ReliabilityManager() {
     Dataset *dataset = Dataset::getInstance();
     this->graph = dataset->getGraph();
@@ -19,6 +24,12 @@ ReliabilityManager::ReliabilityManager() {
     }
 }
 
+/**
+ * @brief Gets the metrics for a city.
+ * Complexity: O(n)
+ * @param code The city code.
+ * @return The metrics for the city.
+ */
 CityMetrics ReliabilityManager::getCityMetrics(std::string code) {
     CityMetrics res;
 
@@ -31,6 +42,12 @@ CityMetrics ReliabilityManager::getCityMetrics(std::string code) {
     return res;
 }
 
+/**
+ * @brief Evaluates the impact of removing a reservoir.
+ * Complexity: O(n)
+ * @param code The reservoir code.
+ * @return A vector with the affected cities and the difference in flow.
+ */
 vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string code) {
     vector<pair<string, double>> res;
     Dataset *dataset = Dataset::getInstance();
@@ -55,6 +72,12 @@ vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string 
     return res;
 }
 
+/**
+ * @brief Evaluates the impact of removing a station.
+ * Complexity: O(n)
+ * @param code The station code.
+ * @return A vector with the affected cities and the difference in flow.
+ */
 vector<pair<string, double>> ReliabilityManager::evaluateStationImpact(string code) {
     vector<pair<string, double>> res;
     Dataset *dataset = Dataset::getInstance();
@@ -80,6 +103,13 @@ vector<pair<string, double>> ReliabilityManager::evaluateStationImpact(string co
     return res;
 }
 
+/**
+ * @brief Evaluates the impact of removing a pipe.
+ * Complexity: O(n)
+ * @param source The source city code.
+ * @param dest The destination city code.
+ * @return A vector with the affected cities and the difference in flow.
+ */
 vector<pair<string, double>> ReliabilityManager::evaluatePipeImpact(string source, string dest) {
     vector<pair<string, double>> res;
     Dataset *dataset = Dataset::getInstance();
@@ -115,6 +145,12 @@ vector<pair<string, double>> ReliabilityManager::evaluatePipeImpact(string sourc
     return res;
 }
 
+/**
+ * @brief Evaluates the impact of removing a pipe.
+ * Complexity: O(n)
+ * @param code The city code.
+ * @return A vector with the affected pipes and the difference in flow.
+ */
 vector<pair<pair<string, string>, double>> ReliabilityManager::evaluateCityImpactByPipes(string code) {
 
     vector<pair<pair<string, string>, double>> res;
