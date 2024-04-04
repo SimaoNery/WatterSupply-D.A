@@ -175,6 +175,7 @@ void ReliabilityMenu::showAffectingStations() {
                      << " (m3/s) " << endl;
             }
         }
+        cout << endl;
     }
 
     printFooterOption();
@@ -253,7 +254,7 @@ void ReliabilityMenu::showAffectingPipes() {
         return;
     }
 
-    cout << "Pipeline Failures:\n";
+    cout << "Pipeline Failures:\n" << endl;
 
 
     for (const auto &pipe: pipes) {
@@ -321,11 +322,19 @@ void ReliabilityMenu::sequentialPipeRemoval() {
         cout << "Choose a source:";
         cin >> source;
         transform(source.begin(), source.end(), source.begin(), ::toupper);
+        if(!dataset->getGraph().findVertex(source)){
+            cout << "Invalid!";
+            break;
+        }
         cout << endl;
 
         cout << "Choose a destiny:";
         cin >> dest;
         transform(dest.begin(), dest.end(), dest.begin(), ::toupper);
+        if(!dataset->getGraph().findVertex(source)){
+            cout << "Invalid!";
+            break;
+        }
         cout << endl;
 
         vector<pair<string, double>> affectedCities = reliabilityManager.evaluatePipeImpact(source, dest);
@@ -361,6 +370,10 @@ void ReliabilityMenu::sequentialStationRemoval() {
         cout << "Choose a station:";
         cin >> code;
         transform(code.begin(), code.end(), code.begin(), ::toupper);
+        if(!dataset->getGraph().findVertex(code)){
+            cout << "Invalid!";
+            break;
+        }
         cout << endl;
 
         vector<pair<string, double>> affectedCities = reliabilityManager.evaluateStationImpact(code);
@@ -376,42 +389,7 @@ void ReliabilityMenu::sequentialStationRemoval() {
             cout << "No cities affected!" << endl;
         }
 
-        cout << "Do you want to remove another pipe? (yes | no)" << endl;
-        cin >> cont;
-        transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
-        cout << endl;
-    }
-
-    printFooterOption();
-}
-
-void ReliabilityMenu::sequentialReservoirRemoval() {
-    cout << "\n***********************************************************\n";
-    Dataset *dataset = Dataset::getInstance();
-    dataset->resetChanges();
-    string code;
-    string cont = "YES";
-
-    while (cont == "YES") {
-        cout << "Choose a reservoir:";
-        cin >> code;
-        transform(code.begin(), code.end(), code.begin(), ::toupper);
-        cout << endl;
-
-        vector<pair<string, double>> affectedCities = reliabilityManager.evaluateReservoirImpact(code);
-
-        if (!affectedCities.empty()) {
-            for (const auto &city: affectedCities) {
-                string cityName = dataset->getNodeName(city.first);
-                cout << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
-                     << city.second << endl;
-
-            }
-        } else if (affectedCities.empty()) {
-            cout << "No cities affected!" << endl;
-        }
-
-        cout << "Do you want to remove another reservoir? (yes | no)" << endl;
+        cout << endl << "Do you want to remove another pipe? (yes | no)" << endl;
         cin >> cont;
         transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
         cout << endl;
