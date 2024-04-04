@@ -9,10 +9,6 @@ FlowManager::FlowManager() {
     this->g = dataset->getGraph();
 }
 
-FlowManager::FlowManager(Graph g) {
-    this->g = g;
-}
-
 
 // Function to test the given vertex 'w' and visit it if conditions are met
 void FlowManager::testAndVisit(queue<Vertex *> &q, Edge *e, Vertex *w, double residual) {

@@ -5,11 +5,12 @@
 #include <fstream>
 #include <sstream>
 #include "Dataset.h"
+#include "managers/FlowManager.h"
 
-string CITIES_PATH = "data/Cities.csv";
-string PIPES_PATH = "data/Pipes.csv";
-string RESERVOIRS_PATH = "data/Reservoir.csv";
-string STATIONS_PATH = "data/Stations.csv";
+string CITIES_PATH = "data/small_data/Cities_Madeira.csv";
+string PIPES_PATH = "data/small_data/Pipes_Madeira.csv";
+string RESERVOIRS_PATH = "data/small_data/Reservoirs_Madeira.csv";
+string STATIONS_PATH = "data/small_data/Stations_Madeira.csv";
 
 Dataset *Dataset::dataset = nullptr;
 
@@ -158,4 +159,23 @@ string Dataset::getReservoirName(string code) {
 
 vector<pair<string, string>> Dataset::getPipes() {
     return this->pipes;
+}
+
+void Dataset::resetChanges() {
+    for (const auto &change: changes) {
+        auto v = graph.findVertex(change.first.first);
+
+        for (auto e: v->getAdj()) {
+            if (e->getDest()->getCode() == change.first.second) {
+                e->setWeight(change.second);
+            }
+        }
+    }
+    FlowManager flowManager;
+    flowManager.getMaxFlow();
+    changes.clear();
+}
+
+void Dataset::addChange(Pipe pipe, double capacity) {
+    changes.emplace_back(pipe, capacity);
 }

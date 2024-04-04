@@ -7,18 +7,19 @@
 
 
 #include "models/Graph.h"
+#include "FlowManager.h"
 
 class ReliabilityManager {
 private:
     Graph graph;
+    vector<CityMetrics> originalMetrics;
+
 public:
     ReliabilityManager();
 
+    CityMetrics getCityMetrics(string code);
+
     vector<pair<std::string, double>> evaluateReservoirImpact(string code);
-
-    Graph copyGraphWithoutVertex(string code);
-
-    Graph copyGraphWithoutEdge(string orig, string dest);
 
     vector<pair<string, double>> evaluateStationImpact(string code);
 

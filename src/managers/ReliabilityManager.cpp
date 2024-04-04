@@ -9,67 +9,46 @@
 ReliabilityManager::ReliabilityManager() {
     Dataset *dataset = Dataset::getInstance();
     this->graph = dataset->getGraph();
+
+    FlowManager flowManager;
+    flowManager.getMaxFlow();
+
+    for (auto city: graph.getDeliverySites()) {
+        auto aux = flowManager.getCityMetrics(city->getCode());
+        originalMetrics.push_back(aux);
+    }
 }
 
-// copy graph without vertex
-Graph ReliabilityManager::copyGraphWithoutVertex(string code) {
-    Graph g;
-    for (Vertex *v: graph.getVertexSet()) {
-        if (v->getCode() != code) {
-            g.addVertex(new Vertex(*v));
-        }
-    }
-    for (Vertex *v: graph.getVertexSet()) {
-        if (v->getCode() != code) {
-            Vertex *copiedVertex = g.findVertex(v->getCode());
-            for (Edge *e: v->getAdj()) {
-                if (e->getDest()->getCode() != code) {
-                    Vertex *dest = g.findVertex(e->getDest()->getCode());
-                    copiedVertex->addEdge(dest, e->getWeight());
-                }
-            }
-        }
-    }
-    return g;
-}
+CityMetrics ReliabilityManager::getCityMetrics(std::string code) {
+    CityMetrics res;
 
-// copy graph without edge
-Graph ReliabilityManager::copyGraphWithoutEdge(string orig, string dest) {
-    Graph g;
-    for (Vertex *v: graph.getVertexSet()) {
-        g.addVertex(new Vertex(*v));
-    }
-    for (Vertex *v: graph.getVertexSet()) {
-        Vertex *copiedVertex = g.findVertex(v->getCode());
-        for (Edge *e: v->getAdj()) {
-            if ((e->getOrig()->getCode() == orig && e->getDest()->getCode() == dest) ||
-                e->getOrig()->getCode() == dest && e->getDest()->getCode() == orig) {
-                continue;
-            }
-
-            Vertex *orig = g.findVertex(e->getOrig()->getCode());
-            Vertex *dest = g.findVertex(e->getDest()->getCode());
-            copiedVertex->addEdge(dest, e->getWeight());
+    for (const auto &metrics: originalMetrics) {
+        if (metrics.city == code) {
+            res = metrics;
         }
     }
-    return g;
+
+    return res;
 }
 
 vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string code) {
     vector<pair<string, double>> res;
-    FlowManager originalFlowManager(graph);
+    Dataset *dataset = Dataset::getInstance();
+    dataset->resetChanges();
 
-    // Create a new graph that is a copy of the original graph but without the reservoir
-    Graph g = copyGraphWithoutVertex(code);
+    FlowManager flowManager;
+    auto v = graph.findVertex(code);
 
-    FlowManager flowManager(g);
+    for (auto e: v->getAdj()) {
+        dataset->addChange(make_pair(e->getOrig()->getCode(), e->getDest()->getCode()), e->getWeight());
+        e->setWeight(0);
+    }
 
-    for (auto city: g.getDeliverySites()) {
-        CityMetrics originalMetrics = originalFlowManager.getCityMetrics(city->getCode());
+    for (auto city: graph.getDeliverySites()) {
         CityMetrics changedMetrics = flowManager.getCityMetrics(city->getCode());
 
         // If the city has less flow in the copied graph, it's affected by the removal of the reservoir
-        if (changedMetrics.incomingFlow < originalMetrics.incomingFlow && originalMetrics.difference == 0) {
+        if (changedMetrics.incomingFlow < getCityMetrics(city->getCode()).incomingFlow) {
             res.emplace_back(city->getCode(), changedMetrics.difference);
         }
     }
@@ -79,19 +58,22 @@ vector<pair<string, double>> ReliabilityManager::evaluateReservoirImpact(string 
 
 vector<pair<string, double>> ReliabilityManager::evaluateStationImpact(string code) {
     vector<pair<string, double>> res;
-    FlowManager originalFlowManager(graph);
+    Dataset *dataset = Dataset::getInstance();
+    dataset->resetChanges();
 
-    // Create a new graph that is a copy of the original graph but without the reservoir
-    Graph g = copyGraphWithoutVertex(code);
+    FlowManager flowManager;
 
-    FlowManager flowManager(g);
+    auto v = graph.findVertex(code);
+    for (auto e: v->getAdj()) {
+        dataset->addChange(make_pair(e->getOrig()->getCode(), e->getDest()->getCode()), e->getWeight());
+        e->setWeight(0);
+    }
 
-    for (auto city: g.getDeliverySites()) {
-        CityMetrics originalMetrics = originalFlowManager.getCityMetrics(city->getCode());
+    for (auto city: graph.getDeliverySites()) {
         CityMetrics changedMetrics = flowManager.getCityMetrics(city->getCode());
 
         // If the city has less flow in the copied graph, it's affected by the removal of the reservoir
-        if (changedMetrics.incomingFlow < originalMetrics.incomingFlow) {
+        if (changedMetrics.incomingFlow < getCityMetrics(city->getCode()).incomingFlow) {
             res.emplace_back(city->getCode(), changedMetrics.difference);
         }
     }
@@ -101,20 +83,32 @@ vector<pair<string, double>> ReliabilityManager::evaluateStationImpact(string co
 
 vector<pair<string, double>> ReliabilityManager::evaluatePipeImpact(string source, string dest) {
     vector<pair<string, double>> res;
+    Dataset *dataset = Dataset::getInstance();
 
-    FlowManager originalFlowManager(graph);
+    FlowManager flowManager;
 
-    // Create a new graph that is a copy of the original graph but without the reservoir
-    Graph g = copyGraphWithoutEdge(source, dest);
+    auto v1 = graph.findVertex(source);
+    auto v2 = graph.findVertex(dest);
 
-    FlowManager flowManager(g);
 
-    for (auto city: g.getDeliverySites()) {
-        CityMetrics originalMetrics = originalFlowManager.getCityMetrics(city->getCode());
+    for (auto e: v1->getAdj()) {
+        if (e->getDest()->getCode() == dest) {
+            dataset->addChange(make_pair(e->getOrig()->getCode(), e->getDest()->getCode()), e->getWeight());
+            e->setWeight(0);
+        }
+    }
+    for (auto e: v2->getAdj()) {
+        if (e->getDest()->getCode() == source) {
+            dataset->addChange(make_pair(e->getOrig()->getCode(), e->getDest()->getCode()), e->getWeight());
+            e->setWeight(0);
+        }
+    }
+
+    for (auto city: graph.getDeliverySites()) {
         CityMetrics changedMetrics = flowManager.getCityMetrics(city->getCode());
 
         // If the city has less flow in the copied graph, it's affected by the removal of the reservoir
-        if (changedMetrics.incomingFlow < originalMetrics.incomingFlow) {
+        if (changedMetrics.incomingFlow < getCityMetrics(city->getCode()).incomingFlow) {
             res.emplace_back(city->getCode(), changedMetrics.difference);
         }
     }
@@ -123,26 +117,40 @@ vector<pair<string, double>> ReliabilityManager::evaluatePipeImpact(string sourc
 }
 
 vector<pair<pair<string, string>, double>> ReliabilityManager::evaluateCityImpactByPipes(string code) {
-    // vector<pipe, impact>
+
     vector<pair<pair<string, string>, double>> res;
 
-    FlowManager originalFlowManager(graph);
+    FlowManager flowManager;
     Dataset *dataset = Dataset::getInstance();
+
     // calculate affecting pipes for each city
-    for (auto pipe: dataset->getPipes()) {
+    for (const auto &pipe: dataset->getPipes()) {
+        dataset->resetChanges();
         // Create a new graph that is a copy of the original graph but without the reservoir
-        Graph g = copyGraphWithoutEdge(pipe.first, pipe.second);
+        auto v1 = graph.findVertex(pipe.first);
+        auto v2 = graph.findVertex(pipe.second);
 
-        FlowManager flowManager(g);
-
-        CityMetrics originalMetrics = originalFlowManager.getCityMetrics(code);
+        for (auto e: v1->getAdj()) {
+            if (e->getDest()->getCode() == pipe.second) {
+                dataset->addChange(make_pair(e->getOrig()->getCode(), e->getDest()->getCode()), e->getWeight());
+                e->setWeight(0);
+            }
+        }
+        for (auto e: v2->getAdj()) {
+            if (e->getDest()->getCode() == pipe.first) {
+                dataset->addChange(make_pair(e->getOrig()->getCode(), e->getDest()->getCode()), e->getWeight());
+                e->setWeight(0);
+            }
+        }
         CityMetrics changedMetrics = flowManager.getCityMetrics(code);
 
         // If the city has less flow in the copied graph, it's affected by the removal of the reservoir
-        if (changedMetrics.incomingFlow < originalMetrics.incomingFlow) {
+        if (changedMetrics.incomingFlow < getCityMetrics(code).incomingFlow) {
             res.emplace_back(make_pair(pipe.first, pipe.second),
                              changedMetrics.difference);
         }
+
+
     }
 
     return res;

@@ -13,12 +13,13 @@ void ReliabilityMenu::display() {
          << "*     1) Reservoirs Reliability                                                        *\n"
          << "*     2) Stations Reliability                                                          *\n"
          << "*     3) Pipes Reliability                                                             *\n"
+         << "*     4) Reset Changes                                                                 *\n"
          << "*                                                                                      *\n"
          << "*                                                                              0) Back *\n"
          << "****************************************************************************************\n"
          << "Option: ";
     int option;
-    while (!(cin >> option) || (option < 0 || option > 3)) {
+    while (!(cin >> option) || (option < 0 || option > 4)) {
         cin.clear(); // clear the error state
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore the invalid input
         cout << "Invalid option, please try again: ";
@@ -33,20 +34,13 @@ void ReliabilityMenu::display() {
         case 3:
             showPipelineReliability();
             break;
+        case 4:
+            resetChanges();
         case 0:
             backToMain();
             break;
     }
 }
-
-/*
- void ReliabilityMenu::showMenu() {
-    ReliabilityManager reliabilityManager;
-
-    reliabilityManager.evaluateReservoirImpact();
-}
-
-*/
 
 /**
  * @brief Navigates back to the main menu.
@@ -108,13 +102,14 @@ void ReliabilityMenu::showStationsReliability() {
          << "*     1) Non-affecting Stations                                                        *\n"
          << "*     2) Affecting Stations                                                            *\n"
          << "*     3) Cities affected by a specific station                                         *\n"
+         << "*     4) Sequential Station Removal                                                    *\n"
          << "*                                                                                      *\n"
          << "*                                                                                      *\n"
          << "*                                                                              0) Back *\n"
          << "****************************************************************************************\n"
          << "Option: ";
     int option;
-    while (!(cin >> option) || (option < 0 || option > 3)) {
+    while (!(cin >> option) || (option < 0 || option > 4)) {
         cin.clear(); // clear the error state
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore the invalid input
         cout << "Invalid option, please try again: ";
@@ -128,6 +123,9 @@ void ReliabilityMenu::showStationsReliability() {
             break;
         case 3:
             showCitiesAffectedByStation();
+            break;
+        case 4:
+            sequentialPipeRemoval();
             break;
         case 0:
             backToMain();
@@ -205,12 +203,13 @@ void ReliabilityMenu::showPipelineReliability() {
          << "*                                                                                      *\n"
          << "*     1) Cities affected by each pipe                                                  *\n"
          << "*     2) Pipes that affect each city                                                   *\n"
+         << "*     3) Sequential Pipe Removal                                                       *\n"
          << "*                                                                                      *\n"
          << "*                                                                              0) Back *\n"
          << "****************************************************************************************\n"
          << "Option: ";
     int option;
-    while (!(cin >> option) || (option < 0 || option > 2)) {
+    while (!(cin >> option) || (option < 0 || option > 3)) {
         cin.clear(); // clear the error state
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore the invalid input
         cout << "Invalid option, please try again: ";
@@ -221,6 +220,9 @@ void ReliabilityMenu::showPipelineReliability() {
             break;
         case 2:
             showAffectedCities();
+            break;
+        case 3:
+            sequentialPipeRemoval();
             break;
         case 0:
             backToMain();
@@ -246,7 +248,7 @@ void ReliabilityMenu::showAffectingPipes() {
         cout << "Pipeline from " << pipe.first << " to " << pipe.second
              << ":\n";
 
-
+        dataset->resetChanges();
         vector<pair<string, double>> affectedCities = reliabilityManager.evaluatePipeImpact(pipe.first, pipe.second);
 
 
@@ -295,3 +297,120 @@ void ReliabilityMenu::showAffectedCities() {
 }
 
 
+void ReliabilityMenu::sequentialPipeRemoval() {
+    cout << "\n***********************************************************\n";
+    Dataset *dataset = Dataset::getInstance();
+
+    string source;
+    string dest;
+    string cont = "YES";
+
+    while (cont == "YES") {
+        cout << "Choose a source:";
+        cin >> source;
+        transform(source.begin(), source.end(), source.begin(), ::toupper);
+        cout << endl;
+
+        cout << "Choose a destiny:";
+        cin >> dest;
+        transform(dest.begin(), dest.end(), dest.begin(), ::toupper);
+        cout << endl;
+
+        vector<pair<string, double>> affectedCities = reliabilityManager.evaluatePipeImpact(source, dest);
+
+        if (!affectedCities.empty()) {
+            for (const auto &city: affectedCities) {
+                string cityName = dataset->getNodeName(city.first);
+                cout << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
+                     << city.second << endl;
+
+            }
+        } else if (affectedCities.empty()) {
+            cout << "No cities affected!" << endl;
+        }
+
+        cout << "Do you want to remove another pipe? (yes | no)" << endl;
+        cin >> cont;
+        transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
+        cout << endl;
+    }
+
+    printFooterOption();
+}
+
+void ReliabilityMenu::sequentialStationRemoval() {
+    cout << "\n***********************************************************\n";
+    Dataset *dataset = Dataset::getInstance();
+
+    string code;
+    string cont = "YES";
+
+    while (cont == "YES") {
+        cout << "Choose a station:";
+        cin >> code;
+        transform(code.begin(), code.end(), code.begin(), ::toupper);
+        cout << endl;
+
+        vector<pair<string, double>> affectedCities = reliabilityManager.evaluateStationImpact(cont);
+
+        if (!affectedCities.empty()) {
+            for (const auto &city: affectedCities) {
+                string cityName = dataset->getNodeName(city.first);
+                cout << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
+                     << city.second << endl;
+
+            }
+        } else if (affectedCities.empty()) {
+            cout << "No cities affected!" << endl;
+        }
+
+        cout << "Do you want to remove another pipe? (yes | no)" << endl;
+        cin >> cont;
+        transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
+        cout << endl;
+    }
+
+    printFooterOption();
+}
+
+void ReliabilityMenu::sequentialReservoirRemoval() {
+    cout << "\n***********************************************************\n";
+    Dataset *dataset = Dataset::getInstance();
+
+    string code;
+    string cont = "YES";
+
+    while (cont == "YES") {
+        cout << "Choose a reservoir:";
+        cin >> code;
+        transform(code.begin(), code.end(), code.begin(), ::toupper);
+        cout << endl;
+
+        vector<pair<string, double>> affectedCities = reliabilityManager.evaluateReservoirImpact(code);
+
+        if (!affectedCities.empty()) {
+            for (const auto &city: affectedCities) {
+                string cityName = dataset->getNodeName(city.first);
+                cout << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
+                     << city.second << endl;
+
+            }
+        } else if (affectedCities.empty()) {
+            cout << "No cities affected!" << endl;
+        }
+
+        cout << "Do you want to remove another reservoir? (yes | no)" << endl;
+        cin >> cont;
+        transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
+        cout << endl;
+    }
+
+    printFooterOption();
+}
+
+void ReliabilityMenu::resetChanges() {
+    Dataset *dataset = Dataset::getInstance();
+    dataset->resetChanges();
+    cout << "Changes reset successfully." << endl;
+    this->display();
+}

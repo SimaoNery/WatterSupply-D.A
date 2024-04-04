@@ -46,6 +46,14 @@ private:
     void showAffectingPipes();
 
     void showAffectedCities();
+
+    void sequentialPipeRemoval();
+
+    void sequentialStationRemoval();
+
+    void sequentialReservoirRemoval();
+
+    void resetChanges();
 };
 
 #endif //DA_WATER_SUPPLY_RELIABILITYMENU_H

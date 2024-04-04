@@ -243,3 +243,7 @@ void Edge::setReverse(Edge *reverse) {
 void Edge::setFlow(double flow) {
     this->flow = flow;
 }
+
+void Edge::setWeight(double d) {
+    this->weight = d;
+}

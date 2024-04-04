@@ -55,7 +55,7 @@ private:           // info node
 public:
     // Constructor for a default VertexEdge
     Vertex();
-    
+
     // Constructor for a VertexEdge of type STATION
     Vertex(string code, NodeType nodeType);
 
@@ -155,6 +155,8 @@ public:
     void setReverse(Edge *reverse);
 
     void setFlow(double flow);
+
+    void setWeight(double d);
 
 protected:
     Vertex *dest; // destination vertex

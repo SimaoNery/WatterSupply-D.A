@@ -7,13 +7,17 @@
 
 #include "models/Graph.h"
 
+using Pipe = pair<string, string>;
+
 class Dataset {
 private:
     static Dataset *dataset;
 
     Graph graph;
 
-    vector<pair<string, string>> pipes;
+    vector<Pipe> pipes;
+
+    vector<pair<Pipe, double>> changes;
 
     // Private constructor so that no objects can be created.
     Dataset();
@@ -46,6 +50,10 @@ public:
     vector<pair<int, string>> stations;
 
     vector<pair<string, string>> getPipes();
+
+    void resetChanges();
+
+    void addChange(Pipe pipe, double change);
 };
 
 
