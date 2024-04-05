@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "utils/Dataset.h"
 #include "managers/FlowManager.h"
 #include "views/Menu.h"
@@ -7,7 +8,16 @@
 
 using namespace std;
 
+void clearOutputFile() {
+    ofstream outputFile("output.txt", ios::trunc); // Open the file in truncation mode (clears existing content)
+    if (outputFile.is_open()) {
+        // File opened successfully, close it
+        outputFile.close();
+    }
+}
+
 int main() {
+    clearOutputFile();
     cout << "Loading dataset..." << endl;
     Dataset *dataset = Dataset::getInstance();
     Menu *menu;

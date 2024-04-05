@@ -42,12 +42,6 @@ public:
     vector<pair<string, double>> getWaterNeeds();
 
     CityMetrics getCityMetrics(string city);
-
-    Metrics calculateMetrics();
-
-    Metrics balanceLoad();
-
-    bool dfs(Vertex *v, double minFlow);
 };
 
 
