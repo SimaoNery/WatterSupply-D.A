@@ -2,6 +2,7 @@
 // Created by jpnsantos on 21/03/24.
 //
 
+#include <fstream>
 #include "MetricsMenu.h"
 #include "MainMenu.h"
 #include "managers/FlowManager.h"
@@ -77,6 +78,13 @@ void MetricsMenu::printFooterOption() {
 }
 
 void MetricsMenu::showNetworkFlow() {
+    ofstream outputFile("output.txt", ios::app); // Open the file in append mode
+    if (outputFile.is_open()) {
+        outputFile << "\n***********************************************************\n"
+                   << "\nNetwork flow: " << flowManager.getMaxFlow() << " (m3/s) " << endl;
+        outputFile.close(); // Close the file
+    }
+
     cout << "\n***********************************************************\n"
          << "\nNetwork flow: " << flowManager.getMaxFlow() << " (m3/s) " << endl;
     printFooterOption();
@@ -88,6 +96,16 @@ void MetricsMenu::showFlowForCity() {
     cout << "Enter city code: ";
     cin >> code;
     transform(code.begin(), code.end(), code.begin(), ::toupper);
+
+    ofstream outputFile("output.txt", ios::app); // Open the file in append mode
+    if (outputFile.is_open()) {
+        outputFile << "\n***********************************************************\n";
+        outputFile << "\nFlow getting into " << dataset->getNodeName(code) << " (" << code << ")" << ": "
+                   << flowManager.getMaxFlow(code)
+                   << " (m3/s) " << endl;
+        outputFile.close(); // Close the file
+    }
+
     cout << "\n***********************************************************\n";
     cout << "\nFlow getting into " << dataset->getNodeName(code) << " (" << code << ")" << ": "
          << flowManager.getMaxFlow(code)
@@ -96,6 +114,18 @@ void MetricsMenu::showFlowForCity() {
 }
 
 void MetricsMenu::showFlowForAllCities() {
+    ofstream outputFile("output.txt", ios::app); // Open the file in append mode
+    if (outputFile.is_open()) {
+        Dataset *dataset = Dataset::getInstance();
+        outputFile << "\n***********************************************************\n";
+        outputFile << "\n Flow getting to each city: \n";
+        for (auto city: dataset->getGraph().getDeliverySites()) {
+            outputFile << "   - " << city->getName() << " (" << city->getCode() << ")" << ": "
+                       << flowManager.getMaxFlow(city->getCode()) << " (m3/s) " << endl;
+        }
+        outputFile.close(); // Close the file
+    }
+
     cout << "\n***********************************************************\n";
     cout << "\n Flow getting to each city: \n";
     Dataset *dataset = Dataset::getInstance();
@@ -107,6 +137,19 @@ void MetricsMenu::showFlowForAllCities() {
 }
 
 void MetricsMenu::showWaterNeeds() {
+    ofstream outputFile("output.txt", ios::app); // Open the file in append mode
+    if (outputFile.is_open()) {
+        Dataset *dataset = Dataset::getInstance();
+        outputFile << "\n***********************************************************\n";
+        outputFile << "\n Water needs for current configuration: \n";
+        for (const auto &value: flowManager.getWaterNeeds()) {
+            outputFile << "   - " << dataset->getNodeName(value.first) << " (" << value.first << ")" << ": needs "
+                       << value.second
+                       << " (m3/s) " << endl;
+        }
+        outputFile.close(); // Close the file
+    }
+
     Dataset *dataset = Dataset::getInstance();
     cout << "\n***********************************************************\n";
     cout << "\n Water needs for current configuration: \n";

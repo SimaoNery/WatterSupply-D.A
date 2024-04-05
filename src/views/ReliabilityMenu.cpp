@@ -1,6 +1,7 @@
 //
 // Created by jpnsantos on 21/03/24.
 //
+#include <fstream>
 #include "ReliabilityMenu.h"
 #include "MainMenu.h"
 #include "managers/ReliabilityManager.h"
@@ -67,18 +68,31 @@ void ReliabilityMenu::printFooterOption() {
 }
 
 void ReliabilityMenu::showReservoirsReliability() {
+    fstream outputFile("output.txt", ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error opening output file!" << endl;
+        return;
+    }
+
+
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
+
     Dataset *dataset = Dataset::getInstance();
     string code;
     string cont = "YES";
 
     while (cont == "YES") {
         cout << "Enter reservoir code: ";
+        outputFile << "Enter reservoir code: ";
         cin >> code;
         transform(code.begin(), code.end(), code.begin(), ::toupper);
         cout << "\n***********************************************************\n";
+        outputFile << "\n***********************************************************\n";
         cout << "\nCities affected by the removal of " << dataset->getReservoirName(code) << " (" << code << ")"
              << ":\n";
+        outputFile << "\nCities affected by the removal of " << dataset->getReservoirName(code) << " (" << code << ")"
+                   << ":\n";
 
 
         vector<pair<string, double>> affectedCities = reliabilityManager.evaluateReservoirImpact(code);
@@ -86,21 +100,28 @@ void ReliabilityMenu::showReservoirsReliability() {
 
         if (affectedCities.empty()) {
             cout << "No cities affected by the removal of this reservoir." << endl;
+            outputFile << "No cities affected by the removal of this reservoir." << endl;
         } else {
 
             for (const auto &city: affectedCities) {
                 cout << "\n - " << dataset->getNodeName(city.first) << " (" << city.first << ")" << ": "
                      << city.second
                      << " (m3/s) " << endl;
+                outputFile << "\n - " << dataset->getNodeName(city.first) << " (" << city.first << ")" << ": "
+                           << city.second
+                           << " (m3/s) " << endl;
             }
         }
 
         cout << endl << "Do you want to remove another reservoir? (yes/no)" << endl;
+        outputFile << endl << "Do you want to remove another reservoir? (yes/no)" << endl;
         cin >> cont;
         transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
         cout << endl;
+        outputFile << endl;
     }
 
+    outputFile.close();
     printFooterOption();
 }
 
@@ -144,8 +165,16 @@ void ReliabilityMenu::showStationsReliability() {
 }
 
 void ReliabilityMenu::showNoAffectingStations() {
+    ofstream outputFile("output.txt", ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error opening output file!" << endl;
+        return;
+    }
+
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
     cout << "\nStations that do not affect any city:\n";
+    outputFile << "\nStations that do not affect any city:\n";
     Dataset *dataset = Dataset::getInstance();
     Graph g = dataset->getGraph();
     for (auto s: g.getStations()) {
@@ -153,15 +182,27 @@ void ReliabilityMenu::showNoAffectingStations() {
         vector<pair<string, double>> res = reliabilityManager.evaluateStationImpact(s->getCode());
         if (res.empty()) {
             cout << "- " << s->getCode() << endl;
+            outputFile << "- " << s->getCode() << endl;
         }
     }
 
+    outputFile.close();
     printFooterOption();
 }
 
 void ReliabilityMenu::showAffectingStations() {
+    ofstream outputFile("output.txt", ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error opening output file!" << endl;
+        return;
+    }
+
+
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
     cout << "\nStations that affect cities:\n";
+    outputFile << "\nStations that affect cities:\n";
+
     Dataset *dataset = Dataset::getInstance();
     Graph g = dataset->getGraph();
     for (auto s: g.getStations()) {
@@ -173,23 +214,38 @@ void ReliabilityMenu::showAffectingStations() {
                 cout << " - " << city.first << ": "
                      << city.second
                      << " (m3/s) " << endl;
+                outputFile << " - " << city.first << ": "
+                           << city.second
+                           << " (m3/s) " << endl;
             }
         }
         cout << endl;
+        outputFile << endl;
     }
 
+    outputFile.close();
     printFooterOption();
 }
 
 void ReliabilityMenu::showCitiesAffectedByStation() {
+    ofstream outputFile("output.txt", ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error opening output file!" << endl;
+        return;
+    }
+
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
     Dataset *dataset = Dataset::getInstance();
     string code;
     cout << "Enter station code: ";
+    outputFile << "Enter station code: ";
     cin >> code;
     transform(code.begin(), code.end(), code.begin(), ::toupper);
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
     cout << "\nCities affected by the removal of " << code << ":\n";
+    outputFile << "\nCities affected by the removal of " << code << ":\n";
 
     dataset->resetChanges();
     vector<pair<string, double>> affectedCities = reliabilityManager.evaluateStationImpact(code);
@@ -197,15 +253,20 @@ void ReliabilityMenu::showCitiesAffectedByStation() {
 
     if (affectedCities.empty()) {
         cout << "No cities affected by the removal of this station." << endl;
+        outputFile << "No cities affected by the removal of this station." << endl;
     } else {
 
         for (const auto &city: affectedCities) {
             cout << "\n - " << city.first << ": "
                  << city.second
                  << " (m3/s) " << endl;
+            outputFile << "\n - " << city.first << ": "
+                       << city.second
+                       << " (m3/s) " << endl;
         }
     }
 
+    outputFile.close();
     printFooterOption();
 }
 
@@ -244,22 +305,34 @@ void ReliabilityMenu::showPipelineReliability() {
 }
 
 void ReliabilityMenu::showAffectingPipes() {
+    ofstream outputFile("output.txt", ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error opening output file!" << endl;
+        return;
+    }
+
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
     Dataset *dataset = Dataset::getInstance();
     vector<pair<string, string>> pipes = dataset->getPipes();
 
     if (pipes.empty()) {
         cout << "No pipelines available." << endl;
+        outputFile << "No pipelines available." << endl;
         printFooterOption();
+        outputFile.close();
         return;
     }
 
     cout << "Pipeline Failures:\n" << endl;
+    outputFile << "Pipeline Failures:\n" << endl;
 
 
     for (const auto &pipe: pipes) {
         cout << "Pipeline from " << pipe.first << " to " << pipe.second
              << ":\n";
+        outputFile << "Pipeline from " << pipe.first << " to " << pipe.second
+                   << ":\n";
 
         dataset->resetChanges();
         vector<pair<string, double>> affectedCities = reliabilityManager.evaluatePipeImpact(pipe.first, pipe.second);
@@ -270,24 +343,37 @@ void ReliabilityMenu::showAffectingPipes() {
                 string cityName = dataset->getNodeName(city.first);
                 cout << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
                      << city.second << endl;
+                outputFile << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
+                           << city.second << endl;
 
             }
         }
 
         cout << "----------------------------------------\n";
+        outputFile << "----------------------------------------\n";
     }
 
+    outputFile.close();
     printFooterOption();
 }
 
 void ReliabilityMenu::showAffectedCities() {
+    ofstream outputFile("output.txt", ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error opening output file!" << endl;
+        return;
+    }
+
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
     Dataset *dataset = Dataset::getInstance();
 
     Graph g = dataset->getGraph();
     for (auto city: g.getDeliverySites()) {
         cout << "City " << city->getName() << " (" << city->getCode() << ") "
              << ":\n";
+        outputFile << "City " << city->getName() << " (" << city->getCode() << ") "
+                   << ":\n";
 
 
         vector<pair<pair<string, string>, double>> affectingPipes = reliabilityManager.evaluateCityImpactByPipes(
@@ -299,19 +385,30 @@ void ReliabilityMenu::showAffectedCities() {
                 cout << "Pipe source: " << pipe.first.first << ", Pipe dest: " << pipe.first.second
                      << ", Water Supply Deficit: "
                      << pipe.second << endl;
-
+                outputFile << "Pipe source: " << pipe.first.first << ", Pipe dest: " << pipe.first.second
+                           << ", Water Supply Deficit: "
+                           << pipe.second << endl;
             }
         }
 
         cout << "----------------------------------------\n";
+        outputFile << "----------------------------------------\n";
     }
 
+    outputFile.close();
     printFooterOption();
 }
 
 
 void ReliabilityMenu::sequentialPipeRemoval() {
+    ofstream outputFile("output.txt", ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error opening output file!" << endl;
+        return;
+    }
+
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
     Dataset *dataset = Dataset::getInstance();
 
     string source;
@@ -320,19 +417,23 @@ void ReliabilityMenu::sequentialPipeRemoval() {
 
     while (cont == "YES") {
         cout << "Choose a source:";
+        outputFile << "Choose a source:";
         cin >> source;
         transform(source.begin(), source.end(), source.begin(), ::toupper);
         if(!dataset->getGraph().findVertex(source)){
             cout << "Invalid!";
+            outputFile << "Invalid!";
             break;
         }
         cout << endl;
 
         cout << "Choose a destiny:";
+        outputFile << "Choose a destiny:";
         cin >> dest;
         transform(dest.begin(), dest.end(), dest.begin(), ::toupper);
         if(!dataset->getGraph().findVertex(source)){
             cout << "Invalid!";
+            outputFile << "Invalid!";
             break;
         }
         cout << endl;
@@ -344,23 +445,36 @@ void ReliabilityMenu::sequentialPipeRemoval() {
                 string cityName = dataset->getNodeName(city.first);
                 cout << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
                      << city.second << endl;
+                outputFile << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
+                           << city.second << endl;
 
             }
         } else if (affectedCities.empty()) {
             cout << "No cities affected!" << endl;
+            outputFile << "No cities affected!" << endl;
         }
 
         cout << "Do you want to remove another pipe? (yes | no)" << endl;
+        outputFile << "Do you want to remove another pipe? (yes | no)" << endl;
         cin >> cont;
         transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
         cout << endl;
     }
 
+    outputFile.close();
     printFooterOption();
 }
 
 void ReliabilityMenu::sequentialStationRemoval() {
+    ofstream outputFile("output.txt", ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error opening output file!" << endl;
+        return;
+    }
+
     cout << "\n***********************************************************\n";
+    outputFile << "\n***********************************************************\n";
+
     Dataset *dataset = Dataset::getInstance();
 
     string code;
@@ -368,13 +482,16 @@ void ReliabilityMenu::sequentialStationRemoval() {
     dataset->resetChanges();
     while (cont == "YES") {
         cout << "Choose a station:";
+        outputFile << "Choose a station:";
         cin >> code;
         transform(code.begin(), code.end(), code.begin(), ::toupper);
         if(!dataset->getGraph().findVertex(code)){
             cout << "Invalid!";
+            outputFile << "Invalid!";
             break;
         }
         cout << endl;
+        outputFile << endl;
 
         vector<pair<string, double>> affectedCities = reliabilityManager.evaluateStationImpact(code);
 
@@ -383,18 +500,23 @@ void ReliabilityMenu::sequentialStationRemoval() {
                 string cityName = dataset->getNodeName(city.first);
                 cout << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
                      << city.second << endl;
-
+                outputFile << "City Name: " << cityName << ", City Code: " << city.first << ", Water Supply Deficit: "
+                           << city.second << endl;
             }
         } else if (affectedCities.empty()) {
             cout << "No cities affected!" << endl;
+            outputFile << "No cities affected!" << endl;
         }
 
         cout << endl << "Do you want to remove another pipe? (yes | no)" << endl;
+        outputFile << endl << "Do you want to remove another pipe? (yes | no)" << endl;
         cin >> cont;
         transform(cont.begin(), cont.end(), cont.begin(), ::toupper);
         cout << endl;
+        outputFile << endl;
     }
 
+    outputFile.close();
     printFooterOption();
 }
 
