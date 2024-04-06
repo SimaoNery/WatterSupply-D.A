@@ -22,13 +22,13 @@ private:
 
     void edmondsKarp(string source, string target);
 
-    void augmentFlowAlongPath(Vertex *s, Vertex *t, double f);
+    void augmentFlowAlongPath(Vertex* s, Vertex* t, double f);
 
-    double findMinResidualAlongPath(Vertex *s, Vertex *t);
+    double findMinResidualAlongPath(Vertex* s, Vertex* t);
 
-    bool findAugmentingPath(Vertex *s, Vertex *t);
+    bool findAugmentingPath(Vertex* s, Vertex* t);
 
-    void testAndVisit(queue<Vertex *> &q, Edge *e, Vertex *w, double residual);
+    void testAndVisit(queue<Vertex*>& q, Edge* e, Vertex* w, double residual);
 
 public:
     FlowManager();
@@ -37,11 +37,15 @@ public:
 
     double getMaxFlow();
 
-    bool meetNeeds(string ds, double &difference);
+    bool meetNeeds(string ds, double& difference);
 
     vector<pair<string, double>> getWaterNeeds();
 
     CityMetrics getCityMetrics(string city);
+
+    Metrics calculateMetrics();
+
+    Metrics balanceLoad();
 };
 
 
