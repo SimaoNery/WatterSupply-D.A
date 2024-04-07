@@ -7,10 +7,10 @@
 #include "Dataset.h"
 #include "managers/FlowManager.h"
 
-string CITIES_PATH = "data/small_data/Cities_Madeira.csv";
-string PIPES_PATH = "data/small_data/Pipes_Madeira.csv";
-string RESERVOIRS_PATH = "data/small_data/Reservoirs_Madeira.csv";
-string STATIONS_PATH = "data/small_data/Stations_Madeira.csv";
+string CITIES_PATH = "data/Cities.csv";
+string PIPES_PATH = "data/Pipes.csv";
+string RESERVOIRS_PATH = "data/Reservoir.csv";
+string STATIONS_PATH = "data/Stations.csv";
 
 Dataset *Dataset::dataset = nullptr;
 

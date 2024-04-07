@@ -16,8 +16,6 @@ using namespace std;
 class MainMenu : public Menu {
 public:
     void display() override;
-
-    static void backToMain(); // Add this line
 };
 
 

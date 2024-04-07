@@ -36,9 +36,3 @@ void MainMenu::display() {
             exit(0);
     }
 }
-
-void MainMenu::backToMain() {
-    system("clear");
-    MainMenu mainMenu;
-    mainMenu.display();
-}

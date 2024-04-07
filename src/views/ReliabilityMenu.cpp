@@ -6,6 +6,13 @@
 #include "MainMenu.h"
 #include "managers/ReliabilityManager.h"
 
+/**
+     * Displays the main menu for the Reliability options.
+     * Complexity: O(1), as the number of menu options is fixed.
+     * @brief Displays the main menu and handles user input for the statistics options.
+     * @see showReservoirsReliability(), showStationsReliability(), showPipelineReliability(), resetChanges()
+     * @return void
+     */
 void ReliabilityMenu::display() {
     system("clear");
     cout << "****************************************************************************************\n"
@@ -67,6 +74,9 @@ void ReliabilityMenu::printFooterOption() {
     this->display();
 }
 
+/**
+ * @brief Displays the affected cities by the removal of a reservoir
+ */
 void ReliabilityMenu::showReservoirsReliability() {
     fstream outputFile("output.txt", ios::app);
     if (!outputFile.is_open()) {
@@ -164,6 +174,9 @@ void ReliabilityMenu::showStationsReliability() {
     }
 }
 
+/**
+ * @brief Displays the stations that don't affect any city
+ */
 void ReliabilityMenu::showNoAffectingStations() {
     ofstream outputFile("output.txt", ios::app);
     if (!outputFile.is_open()) {
@@ -190,6 +203,9 @@ void ReliabilityMenu::showNoAffectingStations() {
     printFooterOption();
 }
 
+/**
+ * @brief Displays the stations that affect some city
+ */
 void ReliabilityMenu::showAffectingStations() {
     ofstream outputFile("output.txt", ios::app);
     if (!outputFile.is_open()) {
@@ -227,6 +243,9 @@ void ReliabilityMenu::showAffectingStations() {
     printFooterOption();
 }
 
+/**
+ * @brief Displays the city affected by a station
+ */
 void ReliabilityMenu::showCitiesAffectedByStation() {
     ofstream outputFile("output.txt", ios::app);
     if (!outputFile.is_open()) {
@@ -270,6 +289,7 @@ void ReliabilityMenu::showCitiesAffectedByStation() {
     printFooterOption();
 }
 
+
 void ReliabilityMenu::showPipelineReliability() {
     system("clear");
     cout << "****************************************************************************************\n"
@@ -304,6 +324,9 @@ void ReliabilityMenu::showPipelineReliability() {
     }
 }
 
+/**
+ * @brief Displays the cities affected by a pipe
+ */
 void ReliabilityMenu::showAffectingPipes() {
     ofstream outputFile("output.txt", ios::app);
     if (!outputFile.is_open()) {
@@ -357,6 +380,9 @@ void ReliabilityMenu::showAffectingPipes() {
     printFooterOption();
 }
 
+/**
+ * @brief Displays all the pipes that affect a city
+ */
 void ReliabilityMenu::showAffectedCities() {
     ofstream outputFile("output.txt", ios::app);
     if (!outputFile.is_open()) {
@@ -399,7 +425,9 @@ void ReliabilityMenu::showAffectedCities() {
     printFooterOption();
 }
 
-
+/**
+ * @brief Displays the sequential pipeline removal menu
+ */
 void ReliabilityMenu::sequentialPipeRemoval() {
     ofstream outputFile("output.txt", ios::app);
     if (!outputFile.is_open()) {
@@ -465,6 +493,9 @@ void ReliabilityMenu::sequentialPipeRemoval() {
     printFooterOption();
 }
 
+/**
+ * @brief Displays the menu of sequential station removal
+ */
 void ReliabilityMenu::sequentialStationRemoval() {
     ofstream outputFile("output.txt", ios::app);
     if (!outputFile.is_open()) {
@@ -519,6 +550,10 @@ void ReliabilityMenu::sequentialStationRemoval() {
     outputFile.close();
     printFooterOption();
 }
+
+/**
+ * @brief Reset changes made previously
+ */
 
 void ReliabilityMenu::resetChanges() {
     Dataset *dataset = Dataset::getInstance();

@@ -1,10 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include "utils/Dataset.h"
-#include "managers/FlowManager.h"
 #include "views/Menu.h"
 #include "views/MainMenu.h"
-#include "managers/ReliabilityManager.h"
 
 using namespace std;
 
@@ -29,7 +27,7 @@ void clearOutputFile() {
 int main() {
     clearOutputFile();
     cout << "Loading dataset..." << endl;
-    Dataset* dataset = Dataset::getInstance();
+    Dataset::getInstance();
     Menu* menu;
 
     // Point to main menu

@@ -7,7 +7,6 @@
 struct CityMetrics {
     string city;
     double incomingFlow;
-    double demand;
     double difference;
 };
 

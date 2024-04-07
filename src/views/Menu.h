@@ -11,10 +11,7 @@
  */
 class Menu {
 public:
-    /**
-     * Pure virtual function for displaying a menu.
-     * Must be overridden in derived classes.
-     */
+     // Pure virtual function for displaying a menu. Must be overridden in derived classes.
     virtual void display() = 0;
 };
 

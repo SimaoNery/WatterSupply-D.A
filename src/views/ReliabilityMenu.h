@@ -14,13 +14,6 @@ using namespace std;
 
 class ReliabilityMenu : public Menu {
 public:
-    /**
-     * Displays the main menu for the statistics options.
-     * Complexity: O(1), as the number of menu options is fixed.
-     * @brief Displays the main menu and handles user input for the statistics options.
-     * @see numberAirportsFlights(), flightsOutAirport(), flightsPerCityAirline(), airportToCountries(), numberDestinations(), numberDestinationXstops(), maxTrip(), topKAirports(), essentialAirports(), backToMain()
-     * @return void
-     */
     void display() override;
 
 private:
@@ -50,8 +43,6 @@ private:
     void sequentialPipeRemoval();
 
     void sequentialStationRemoval();
-
-    void sequentialReservoirRemoval();
 
     void resetChanges();
 };

@@ -2,7 +2,6 @@
 #include "utils/Dataset.h"
 
 #include <cmath>
-#include <map>
 #include <set>
 
 /**
@@ -121,7 +120,7 @@ void FlowManager::augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
  *
  * @param source The source vertex code
  * @param target The target vertex code
- * Complexity O(V * E^2)
+     * Complexity O(V * E^2)
  */
 void FlowManager::edmondsKarp(string source, string target) {
 // Find source and target vertices in the graph
@@ -209,8 +208,6 @@ double FlowManager::getMaxFlow() {
  */
 bool FlowManager::meetNeeds(string ds, double &difference) {
     getMaxFlow();
-    auto v = g.findVertex(ds);
-    double current = 0;
 
     CityMetrics cm = getCityMetrics(ds);
 
@@ -255,7 +252,7 @@ CityMetrics FlowManager::getCityMetrics(string city) {
         flow += edge->getFlow();
     }
 
-    return {v->getCode(), flow, v->getDemand(), v->getDemand() - flow};
+    return {v->getCode(), flow, v->getDemand() - flow};
 }
 
 Metrics FlowManager::calculateMetrics() {
@@ -285,20 +282,11 @@ Metrics FlowManager::calculateMetrics() {
 
 Metrics FlowManager::balanceLoad() {
     auto superSource = new Vertex("super_source", NodeType::RESERVOIR);
-    auto superSink = new Vertex("super_sink", NodeType::DELIVERY_SITE);
 
     g.addVertex(superSource);
-    g.addVertex(superSink);
-
     for (auto vert : g.getVertexSet()) {
         if (vert->getType() == NodeType::RESERVOIR) {
             superSource->addEdge(vert, vert->getMaxDelivery());
-        }
-    }
-
-    for (auto vert : g.getVertexSet()) {
-        if (vert->getType() == NodeType::DELIVERY_SITE) {
-            vert->addEdge(superSink, vert->getDemand());
         }
     }
 
@@ -375,28 +363,13 @@ Metrics FlowManager::balanceLoad() {
                     pq.emplace(w->getDist(), w->getCode());
                 }
             }
-
-            // for (auto edge : u->getIncoming()) {
-            //     auto w = edge->getOrig();
-
-            //     // not repeat edges
-            //     if (w == u->getPath()->getOrig()) continue;
-
-            //     auto edge_cost = edge->getFlow() / edge->getWeight();
-
-            //     if (w->getDist() > u->getDist() + edge_cost) {
-            //         w->setDist(u->getDist() + edge_cost);
-            //         w->setPath(edge);
-            //         pq.emplace(w->getDist(), w->getCode());
-            //     }
-            // }
         }
 
         augmentFlowAlongPath(superSource, dest, 10);
     }
 
     g.removeVertex("super_source");
-    g.removeVertex("super_sink");
+
 
     return calculateMetrics();
 }

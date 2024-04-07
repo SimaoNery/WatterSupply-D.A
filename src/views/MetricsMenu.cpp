@@ -7,11 +7,16 @@
 #include "MainMenu.h"
 #include "managers/FlowManager.h"
 
+MetricsMenu::MetricsMenu() {
+    flowManager = FlowManager();
+}
+
+
 /**
      * Displays the main menu for the statistics options.
      * Complexity: O(1), as the number of menu options is fixed.
      * @brief Displays the main menu and handles user input for the statistics options.
-     * @see numberAirportsFlights(), flightsOutAirport(), flightsPerCityAirline(), airportToCountries(), numberDestinations(), numberDestinationXstops(), maxTrip(), topKAirports(), essentialAirports(), backToMain()
+     * @see showNetworkFlow(), showFlowForCity(), showFlowForAllCities(), showWaterNeeds(), showBalanceFlow(), backToMain()
      * @return void
      */
 void MetricsMenu::display() {
@@ -81,6 +86,9 @@ void MetricsMenu::printFooterOption() {
     this->display();
 }
 
+/**
+ * @brief Displays the Network Flow
+ */
 void MetricsMenu::showNetworkFlow() {
     ofstream outputFile("output.txt", ios::app); // Open the file in append mode
     if (outputFile.is_open()) {
@@ -94,6 +102,10 @@ void MetricsMenu::showNetworkFlow() {
     printFooterOption();
 }
 
+
+/**
+ * @brief Displays the flow for a specific city
+ */
 void MetricsMenu::showFlowForCity() {
     Dataset *dataset = Dataset::getInstance();
     string code;
@@ -117,6 +129,9 @@ void MetricsMenu::showFlowForCity() {
     printFooterOption();
 }
 
+/**
+ * @brief Displays the flow all the cities
+ */
 void MetricsMenu::showFlowForAllCities() {
     ofstream outputFile("output.txt", ios::app); // Open the file in append mode
     if (outputFile.is_open()) {
@@ -140,6 +155,9 @@ void MetricsMenu::showFlowForAllCities() {
     printFooterOption();
 }
 
+/**
+ * @brief Displays the cities with water needs
+ */
 void MetricsMenu::showWaterNeeds() {
     ofstream outputFile("output.txt", ios::app); // Open the file in append mode
     if (outputFile.is_open()) {
@@ -165,10 +183,9 @@ void MetricsMenu::showWaterNeeds() {
     printFooterOption();
 }
 
-MetricsMenu::MetricsMenu() {
-    flowManager = FlowManager();
-}
-
+/**
+ * @brief Displays the metrics before and after the balance
+ */
 void MetricsMenu::showBalanceFlow() {
     ofstream outputFile("output.txt", ios::app); // Open the file in append mode
 
@@ -199,6 +216,8 @@ void MetricsMenu::showBalanceFlow() {
     outputFile << "  ->Max Difference: " << postBalanceMetrics.maxDifference << "\n";
 
     outputFile.close();
+
+    flowManager.getMaxFlow();
 
     printFooterOption();
 }
