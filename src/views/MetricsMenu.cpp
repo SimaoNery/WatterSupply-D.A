@@ -25,11 +25,12 @@ void MetricsMenu::display() {
          << "*                                                                                      *\n"
          << "*     4) See cities that cannot be supplied for their water needs                      *\n"
          << "*                                                                                      *\n"
+         << "*     5) Balance Flow                                                                  *\n"
          << "*                                                                              0) Back *\n"
          << "****************************************************************************************\n"
          << "Option: ";
     int option;
-    while (!(cin >> option) || (option < 0 || option > 4)) {
+    while (!(cin >> option) || (option < 0 || option > 5)) {
         cin.clear(); // clear the error state
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ignore the invalid input
         cout << "Invalid option, please try again: ";
@@ -46,6 +47,9 @@ void MetricsMenu::display() {
             break;
         case 4:
             showWaterNeeds();
+            break;
+        case 5:
+            showBalanceFlow();
             break;
         case 0:
             backToMain();
@@ -163,5 +167,38 @@ void MetricsMenu::showWaterNeeds() {
 
 MetricsMenu::MetricsMenu() {
     flowManager = FlowManager();
+}
 
+void MetricsMenu::showBalanceFlow() {
+    ofstream outputFile("output.txt", ios::app); // Open the file in append mode
+
+    flowManager.getMaxFlow();
+
+    // Before balancing load
+    Metrics preBalanceMetrics = flowManager.calculateMetrics();
+    std::cout << "Metrics before load balancing:\n";
+    outputFile << "Metrics before load balancing:\n";
+    std::cout << "  ->Average Difference: " << preBalanceMetrics.averageDifference << "\n";
+    outputFile << "  ->Average Difference: " << preBalanceMetrics.averageDifference << "\n";
+    std::cout << "  ->Variance: " << preBalanceMetrics.variance << "\n";
+    outputFile << "  ->Variance: " << preBalanceMetrics.variance << "\n";
+    std::cout << "  ->Max Difference: " << preBalanceMetrics.maxDifference << "\n";
+    outputFile << "  ->Max Difference: " << preBalanceMetrics.maxDifference << "\n";
+
+    // Balance the load
+    Metrics postBalanceMetrics = flowManager.balanceLoad();
+
+    // After balancing load
+    std::cout << endl << "Metrics after load balancing:\n";
+    outputFile << endl << "Metrics after load balancing:\n";
+    std::cout << "  ->Average Difference: " << postBalanceMetrics.averageDifference << "\n";
+    outputFile << "  ->Average Difference: " << postBalanceMetrics.averageDifference << "\n";
+    std::cout << "  ->Variance: " << postBalanceMetrics.variance << "\n";
+    outputFile << "  ->Variance: " << postBalanceMetrics.variance << "\n";
+    std::cout << "  ->Max Difference: " << postBalanceMetrics.maxDifference << "\n";
+    outputFile << "  ->Max Difference: " << postBalanceMetrics.maxDifference << "\n";
+
+    outputFile.close();
+
+    printFooterOption();
 }

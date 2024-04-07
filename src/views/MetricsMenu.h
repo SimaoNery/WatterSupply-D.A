@@ -18,8 +18,6 @@ public:
 
     MetricsMenu();
 
-    void showMaxFlow();
-
     void showNetworkFlow();
 
     void showFlowForCity();
@@ -27,6 +25,8 @@ public:
     void showFlowForAllCities();
 
     void showWaterNeeds();
+
+    void showBalanceFlow();
 
     void display() override;
 

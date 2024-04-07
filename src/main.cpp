@@ -31,30 +31,10 @@ int main() {
     cout << "Loading dataset..." << endl;
     Dataset* dataset = Dataset::getInstance();
     Menu* menu;
+
     // Point to main menu
     menu = new MainMenu();
     menu->display();
 
     return 0;
-    /*
-    // test balance
-    FlowManager flowManager;
-    flowManager.getMaxFlow();
-
-    // Before balancing load
-    Metrics preBalanceMetrics = flowManager.calculateMetrics();
-    std::cout << "Metrics before load balancing:\n";
-    std::cout << "Average Difference: " << preBalanceMetrics.averageDifference << "\n";
-    std::cout << "Variance: " << preBalanceMetrics.variance << "\n";
-    std::cout << "Max Difference: " << preBalanceMetrics.maxDifference << "\n";
-
-    // Balance the load
-    Metrics postBalanceMetrics = flowManager.balanceLoad();
-
-    // After balancing load
-    std::cout << "Metrics after load balancing:\n";
-    std::cout << "Average Difference: " << postBalanceMetrics.averageDifference << "\n";
-    std::cout << "Variance: " << postBalanceMetrics.variance << "\n";
-    std::cout << "Max Difference: " << postBalanceMetrics.maxDifference << "\n";
-    */
 }
