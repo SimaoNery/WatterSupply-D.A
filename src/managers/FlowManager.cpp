@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <map>
+#include <set>
 
 /**
  * @brief Constructs a new FlowManager object.
@@ -10,7 +11,7 @@
  * The constructor initializes the FlowManager by retrieving an instance of the Dataset singleton and getting the graph from it.
  */
 FlowManager::FlowManager() {
-    Dataset *dataset = Dataset::getInstance();
+    Dataset* dataset = Dataset::getInstance();
     this->g = dataset->getGraph();
 }
 
@@ -45,24 +46,25 @@ bool FlowManager::findAugmentingPath(Vertex *s, Vertex *t) {
     for (auto v: g.getVertexSet()) {
         v->setVisited(false);
     }
-// Mark the source vertex as visited and enqueue it
+    // Mark the source vertex as visited and enqueue it
     s->setVisited(true);
-    std::queue<Vertex *> q;
+    std::queue<Vertex*> q;
     q.push(s);
-// BFS to find an augmenting path
+
+    // BFS to find an augmenting path
     while (!q.empty() && !t->isVisited()) {
         auto v = q.front();
         q.pop();
-// Process outgoing edges
-        for (auto e: v->getAdj()) {
+        // Process outgoing edges
+        for (auto e : v->getAdj()) {
             testAndVisit(q, e, e->getDest(), e->getWeight() - e->getFlow());
         }
-// Process incoming edges
-        for (auto e: v->getIncoming()) {
+        // Process incoming edges
+        for (auto e : v->getIncoming()) {
             testAndVisit(q, e, e->getOrig(), e->getFlow());
         }
     }
-// Return true if a path to the target is found, false otherwise
+    // Return true if a path to the target is found, false otherwise
     return t->isVisited();
 }
 
@@ -76,18 +78,19 @@ bool FlowManager::findAugmentingPath(Vertex *s, Vertex *t) {
  */
 double FlowManager::findMinResidualAlongPath(Vertex *s, Vertex *t) {
     double f = INF;
-// Traverse the augmenting path to find the minimum residual capacity
+    // Traverse the augmenting path to find the minimum residual capacity
     for (auto v = t; v != s;) {
         auto e = v->getPath();
         if (e->getDest() == v) {
             f = std::min(f, e->getWeight() - e->getFlow());
             v = e->getOrig();
-        } else {
+        }
+        else {
             f = std::min(f, e->getFlow());
             v = e->getDest();
         }
     }
-// Return the minimum residual capacity
+    // Return the minimum residual capacity
     return f;
 }
 
@@ -107,7 +110,8 @@ void FlowManager::augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
         if (e->getDest() == v) {
             e->setFlow(flow + f);
             v = e->getOrig();
-        } else {
+        }
+        else {
             e->setFlow(flow - f);
             v = e->getDest();
         }
@@ -122,19 +126,19 @@ void FlowManager::augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
  * Complexity O(V * E^2)
  */
 void FlowManager::edmondsKarp(string source, string target) {
-// Find source and target vertices in the graph
-    Vertex *s = g.findVertex(source);
-    Vertex *t = g.findVertex(target);
-// Validate source and target vertices
+    // Find source and target vertices in the graph
+    Vertex* s = g.findVertex(source);
+    Vertex* t = g.findVertex(target);
+    // Validate source and target vertices
     if (s == nullptr || t == nullptr || s == t)
         throw std::logic_error("Invalid source and/or target vertex");
-// Initialize flow on all edges to 0
-    for (auto v: g.getVertexSet()) {
-        for (auto e: v->getAdj()) {
+    // Initialize flow on all edges to 0
+    for (auto v : g.getVertexSet()) {
+        for (auto e : v->getAdj()) {
             e->setFlow(0);
         }
     }
-// While there is an augmenting path, augment the flow along the path
+    // While there is an augmenting path, augment the flow along the path
     while (findAugmentingPath(s, t)) {
         double f = findMinResidualAlongPath(s, t);
         augmentFlowAlongPath(s, t, f);
@@ -153,7 +157,7 @@ double FlowManager::getMaxFlow(string sink) {
     double max_flow = 0;
     auto v = g.findVertex(sink);
 
-    for (auto edge: v->getIncoming()) {
+    for (auto edge : v->getIncoming()) {
         max_flow += edge->getFlow();
     }
 
@@ -174,13 +178,13 @@ double FlowManager::getMaxFlow() {
     g.addVertex(superSource);
     g.addVertex(superSink);
 
-    for (auto vert: g.getVertexSet()) {
+    for (auto vert : g.getVertexSet()) {
         if (vert->getType() == NodeType::RESERVOIR) {
             superSource->addEdge(vert, vert->getMaxDelivery());
         }
     }
 
-    for (auto vert: g.getVertexSet()) {
+    for (auto vert : g.getVertexSet()) {
         if (vert->getType() == NodeType::DELIVERY_SITE) {
             vert->addEdge(superSink, vert->getDemand());
         }
@@ -188,7 +192,7 @@ double FlowManager::getMaxFlow() {
 
     edmondsKarp("super_source", "super_sink");
 
-    for (auto edge: superSink->getIncoming()) {
+    for (auto edge : superSink->getIncoming()) {
         flow += edge->getFlow();
     }
 
@@ -229,7 +233,7 @@ vector<pair<string, double>> FlowManager::getWaterNeeds() {
     vector<pair<string, double>> fails;
     double difference = 0;
 
-    for (auto v: g.getVertexSet()) {
+    for (auto v : g.getVertexSet()) {
         if ((v->getType() == NodeType::DELIVERY_SITE) && !meetNeeds(v->getCode(), difference)) {
             fails.emplace_back(v->getCode(), difference);
         }
@@ -249,9 +253,9 @@ CityMetrics FlowManager::getCityMetrics(string city) {
     double flow = 0;
     auto v = g.findVertex(city);
 
-    for (auto edge: v->getIncoming()) {
+    for (auto edge : v->getIncoming()) {
         flow += edge->getFlow();
     }
 
-    return {v->getCode(), flow, v->getDemand(), v->getDemand() - flow};
+    return { v->getCode(), flow, v->getDemand(), v->getDemand() - flow };
 }
