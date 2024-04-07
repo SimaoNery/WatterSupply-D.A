@@ -16,6 +16,7 @@ using namespace std;
 
 //-----------------------Vertex-----------------------------------
 
+// Enum class to represent the type of node
 enum class NodeType {
     NONE,
     RESERVOIR,
@@ -23,6 +24,7 @@ enum class NodeType {
     DELIVERY_SITE
 };
 
+// Forward declaration of Edge
 class Edge;
 
 class Vertex {

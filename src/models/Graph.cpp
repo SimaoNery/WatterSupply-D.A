@@ -235,17 +235,12 @@ bool Graph::dfsIsDAG(Vertex *v) const {
 }
 
 /****************** toposort ********************/
-//=============================================================================
-// Exercise 1: Topological Sorting
-//=============================================================================
-// TODO
 /*
  * Performs a topological sorting of the vertices of a graph (this).
  * Returns a vector with the contents of the vertices by topological order.
  * If the graph has cycles, returns an empty vector.
  * Follows the algorithm described in theoretical classes.
  */
-
 vector<string> Graph::topsort() const {
     vector<string> res;
 
@@ -311,6 +306,11 @@ Graph::~Graph() {
     deleteMatrix(pathMatrix, vertexSet.size());
 }
 
+/*
+ * Gets the delivery sites from the dataset.
+ * Complexity: O(n)
+ * @return A vector with the delivery sites.
+ */
 vector<Vertex *> Graph::getDeliverySites() const {
     vector<Vertex *> res;
     for (auto v: vertexSet) {
@@ -321,6 +321,11 @@ vector<Vertex *> Graph::getDeliverySites() const {
     return res;
 }
 
+/*
+ * Gets the reservoirs from the dataset.
+ * Complexity: O(n)
+ * @return A vector with the reservoirs.
+ */
 vector<Vertex *> Graph::getReservoirs() const {
     vector<Vertex *> res;
     for (auto v: vertexSet) {
@@ -331,6 +336,11 @@ vector<Vertex *> Graph::getReservoirs() const {
     return res;
 }
 
+/*
+ * Gets the stations from the dataset.
+ * Complexity: O(1)
+ * @return A vector with the stations.
+ */
 vector<Vertex *> Graph::getStations() const {
     vector<Vertex *> res;
     for (auto v: vertexSet) {

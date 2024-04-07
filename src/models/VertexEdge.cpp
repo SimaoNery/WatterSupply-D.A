@@ -2,16 +2,32 @@
 
 //-----------------------Vertex-----------------------------------
 
+/**
+ * Default constructor of the class Vertex.
+ */
 Vertex::Vertex() {
     this->code = "";
     this->nodeType = NodeType::NONE;
 }
 
+/**
+ * Constructor of the class Station.
+ * @param code unique string identifier
+ * @param nodeType type of node
+ */
 Vertex::Vertex(string code, NodeType nodeType) {
     this->code = code;
     this->nodeType = nodeType;
 }
 
+/**
+ * Constructor of the type City.
+ * @param code unique string identifier
+ * @param nodeType type of node
+ * @param name name of the node
+ * @param demand demand of the node
+ * @param population population of the node
+ */
 Vertex::Vertex(string code, NodeType nodeType, string name, double demand, double population) {
     this->code = code;
     this->nodeType = nodeType;
@@ -20,6 +36,14 @@ Vertex::Vertex(string code, NodeType nodeType, string name, double demand, doubl
     this->population = population;
 }
 
+/**
+ * Constructor of the class Reservoir.
+ * @param code unique string identifier
+ * @param nodeType type of node
+ * @param name name of the node
+ * @param municipality municipality of the node
+ * @param maxDelivery maximum delivery of the node
+ */
 Vertex::Vertex(string code, NodeType nodeType, string name, string municipality, double maxDelivery) {
     this->code = code;
     this->nodeType = nodeType;

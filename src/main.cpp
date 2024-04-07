@@ -16,6 +16,16 @@ void clearOutputFile() {
     }
 }
 
+/**
+ * @brief Main entry point of the application.
+ *
+ * This function is responsible for initializing the dataset, setting up the main menu, and starting the application.
+ * It first prints a message indicating that the dataset is being loaded. Then, it retrieves an instance of the Dataset
+ * singleton and initializes the main menu. Finally, it displays the main menu to start the application.
+ *
+ * @return int Returns 0 upon successful execution.
+ */
+
 int main() {
     clearOutputFile();
     cout << "Loading dataset..." << endl;
@@ -24,35 +34,6 @@ int main() {
     // Point to main menu
     menu = new MainMenu();
     menu->display();
-/*
-    // test evaluation
-    ReliabilityManager reliabilityManager;
 
-    cout << "Evaluating reservoir impact..." << endl;
-    for (auto p: dataset->getPipes()) {
-        vector<pair<string, double>> res = reliabilityManager.evaluatePipeImpact(p.first, p.second);
-        cout << "Pipe " << p.first << " - " << p.second << " impact: " << endl;
-        for (auto city: res) {
-            cout << "   - " << dataset->getNodeName(city.first) << " (" << city.first << "): " << city.second << endl;
-        }
-    }
-*/
-    /*  // test balance
-      FlowManager flowManager;
-      // Before balancing load
-      Metrics preBalanceMetrics = flowManager.calculateMetrics();
-      std::cout << "Metrics before load balancing:\n";
-      std::cout << "Average Difference: " << preBalanceMetrics.averageDifference << "\n";
-      std::cout << "Variance: " << preBalanceMetrics.variance << "\n";
-      std::cout << "Max Difference: " << preBalanceMetrics.maxDifference << "\n";
-
-  // Balance the load
-      Metrics postBalanceMetrics = flowManager.balanceLoad();
-
-  // After balancing load
-      std::cout << "Metrics after load balancing:\n";
-      std::cout << "Average Difference: " << postBalanceMetrics.averageDifference << "\n";
-      std::cout << "Variance: " << postBalanceMetrics.variance << "\n";
-      std::cout << "Max Difference: " << postBalanceMetrics.maxDifference << "\n";
-      */
+    return 0;
 }

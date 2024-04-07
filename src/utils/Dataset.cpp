@@ -14,6 +14,10 @@ string STATIONS_PATH = "data/small_data/Stations_Madeira.csv";
 
 Dataset *Dataset::dataset = nullptr;
 
+/**
+ * @brief Constructor for the Dataset class.
+ * Complexity: O(1)
+ */
 Dataset::Dataset() {
     loadStations();
     loadDeliverySites();
@@ -35,6 +39,10 @@ Dataset *Dataset::getInstance() {
     }
 }
 
+/**
+ * @brief Loads the stations from the dataset.
+ * Complexity: O(n)
+ */
 void Dataset::loadStations() {
 
     ifstream file(STATIONS_PATH);
@@ -61,6 +69,10 @@ void Dataset::loadStations() {
     file.close();
 }
 
+/**
+ * @brief Loads the delivery sites from the dataset.
+ * Complexity: O(n)
+ */
 void Dataset::loadDeliverySites() {
     ifstream file(CITIES_PATH);
     if (!file.is_open()) {
@@ -86,6 +98,10 @@ void Dataset::loadDeliverySites() {
     file.close();
 }
 
+/**
+ * @brief Loads the reservoirs from the dataset.
+ * Complexity: O(n)
+ */
 void Dataset::loadReservoirs() {
     ifstream file(RESERVOIRS_PATH);
     if (!file.is_open()) {
@@ -112,7 +128,10 @@ void Dataset::loadReservoirs() {
     file.close();
 }
 
-
+/**
+ * @brief Loads the pipes from the dataset.
+ * Complexity: O(n)
+ */
 void Dataset::loadPipes() {
     ifstream file(PIPES_PATH);
     if (!file.is_open()) {
@@ -145,22 +164,46 @@ void Dataset::loadPipes() {
     file.close();
 }
 
+/**
+ * @brief Gets the stations from the dataset.
+ * Complexity: O(1)
+ * @return A vector with the stations.
+ */
 const Graph &Dataset::getGraph() const {
     return this->graph;
 }
 
+/**
+ * @brief Gets the stations from the dataset.
+ * Complexity: O(1)
+ * @return A vector with the stations.
+ */
 string Dataset::getNodeName(string code) {
     return graph.findVertex(code)->getName();
 }
 
+/**
+ * @brief Gets the reservoirs from the dataset.
+ * Complexity: O(1)
+ * @return A vector with the reservoirs.
+ */
 string Dataset::getReservoirName(string code) {
     return graph.findVertex(code)->getName();
 }
 
+/**
+ * @brief Gets the pipes from the dataset.
+ * Complexity: O(1)
+ * @return A vector with the pipes.
+ */
 vector<pair<string, string>> Dataset::getPipes() {
     return this->pipes;
 }
 
+/**
+ * @brief Resets the changes made to the pipes.
+ * Complexity: O(n)
+ */
 void Dataset::resetChanges() {
     for (const auto &change: changes) {
         auto v = graph.findVertex(change.first.first);
@@ -176,6 +219,12 @@ void Dataset::resetChanges() {
     changes.clear();
 }
 
+/**
+ * @brief Adds a change to the pipes.
+ * Complexity: O(1)
+ * @param pipe The pipe to change.
+ * @param capacity The new capacity.
+ */
 void Dataset::addChange(Pipe pipe, double capacity) {
     changes.emplace_back(pipe, capacity);
 }
