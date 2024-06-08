@@ -8,7 +8,7 @@
 ><br />
 > Faculty: **FEUP** (Faculty of Engineering of the University of Porto)
 ><br/>
-> Evaluation: **?**/20
+> Evaluation: **18.6**/20
 
 ## Project Goals
 
